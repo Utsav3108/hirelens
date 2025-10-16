@@ -113,6 +113,5 @@ class _RegisterState extends State<Register> {
 
   Widget customTextField({required String placeholder, bool isSecure = false}) {
     return CustomTextField(placeholder: placeholder, isSecure: isSecure);
-    ;
   }
 }

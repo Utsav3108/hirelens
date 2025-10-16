@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Widgets/CustomTextFields.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
@@ -12,49 +13,103 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+
     return Scaffold(
-      backgroundColor: Color.fromRGBO(38, 38, 38, 1),
       body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                // Shadow color with opacity
-                offset: const Offset(0, 4),
-                // X, Y offset of the shadow
-                blurRadius: 8,
-                // Blurriness of the shadow
-                spreadRadius: 2, // How much the shadow spreads
-              ),
-            ],
-          ),
-          height: 300,
-          width: 300,
-          child: Padding(
-            padding: EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: 600,
+            width: width - 40,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Text("Hirelens", style: TextStyle(fontSize: 18))),
-                TextField(
-                  decoration: InputDecoration(hintText: "Enter Email."),
+                SizedBox(height: 30),
+                Text(
+                  "Hirelens.",
+                  style: TextStyle(
+                    fontSize: 48,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                TextField(
-                  decoration: InputDecoration(hintText: "Enter Password."),
+                Text(
+                  "Every story deserves the right lens 📸",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.5,
+                  ),
                 ),
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/home');
-                  },
-                  child: Text("Submit"),
+
+                SizedBox(height: 30),
+
+                customTextField(placeholder: "Enter your email"),
+                SizedBox(height: 20),
+
+                customTextField(
+                  placeholder: "Enter your password",
+                  isSecure: true,
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/register');
-                  },
-                  child: Text("Not having account? Register here."),
+                SizedBox(height: 20),
+
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                    ),
+                    child: Text("Login"),
+                  ),
+                ),
+
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/register");
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Not having an Account?",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(2, 2),
+                                // how far the shadow moves
+                                blurRadius: 6.0,
+                                // how soft the shadow is
+                                color: Colors.grey.withOpacity(
+                                  0.4,
+                                ), // shadow color
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          "Create here",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -62,5 +117,9 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  Widget customTextField({required String placeholder, bool isSecure = false}) {
+    return CustomTextField(placeholder: placeholder, isSecure: isSecure);
   }
 }
