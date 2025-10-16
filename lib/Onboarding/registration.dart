@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'Widgets/CustomTextFields.dart';
+
 class Register extends StatefulWidget {
   const Register({super.key});
 
@@ -10,49 +12,96 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+
     return Scaffold(
-      backgroundColor: Color.fromRGBO(38, 38, 38, 1),
       body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                // Shadow color with opacity
-                offset: const Offset(0, 4),
-                // X, Y offset of the shadow
-                blurRadius: 8,
-                // Blurriness of the shadow
-                spreadRadius: 2, // How much the shadow spreads
-              ),
-            ],
-          ),
-          height: 300,
-          width: 300,
-          child: Padding(
-            padding: EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: 600,
+            width: width - 40,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Text("Hirelens")),
-                TextField(
-                  decoration: InputDecoration(hintText: "Enter Email."),
+                SizedBox(height: 20),
+                Text(
+                  "Hirelens.",
+                  style: TextStyle(
+                    fontSize: 45,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                TextField(
-                  decoration: InputDecoration(hintText: "Enter Password."),
+                Text(
+                  "Create an Account",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/home');
-                  },
-                  child: Text("Submit"),
+
+                SizedBox(height: 20),
+
+                Row(
+                  children: [
+                    Expanded(child: customTextField(placeholder: "First name")),
+                    SizedBox(width: 20),
+                    Expanded(child: customTextField(placeholder: "Last name")),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Already have an Account? Sign In"),
+
+                SizedBox(height: 20),
+
+                customTextField(placeholder: "Enter your email"),
+                SizedBox(height: 20),
+
+                customTextField(placeholder: "Which camera do you have?"),
+                SizedBox(height: 20),
+
+                customTextField(
+                  placeholder: "Enter your password",
+                  isSecure: true,
+                ),
+                SizedBox(height: 20),
+
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
+                    child: Text("Submit"),
+                  ),
+                ),
+
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an Account?",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -60,5 +109,10 @@ class _RegisterState extends State<Register> {
         ),
       ),
     );
+  }
+
+  Widget customTextField({required String placeholder, bool isSecure = false}) {
+    return CustomTextField(placeholder: placeholder, isSecure: isSecure);
+    ;
   }
 }

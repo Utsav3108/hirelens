@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.light,
-        primaryColor: Colors.black,
-        scaffoldBackgroundColor: Colors.white,
+        primaryColor: Colors.white,
+        scaffoldBackgroundColor: Colors.black,
         colorScheme: const ColorScheme.light(
           primary: Colors.black,
           onPrimary: Colors.white,
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           onSurface: Colors.black,
         ),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.black,
           foregroundColor: Colors.black,
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black),
@@ -41,14 +41,14 @@ class MyApp extends StatelessWidget {
           ),
         ),
         textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Colors.black),
-          bodyMedium: TextStyle(color: Colors.black),
-          titleLarge: TextStyle(color: Colors.black),
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
+          titleLarge: TextStyle(color: Colors.white),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            foregroundColor: Colors.white,
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
             textStyle: const TextStyle(fontWeight: FontWeight.w600),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8)),
