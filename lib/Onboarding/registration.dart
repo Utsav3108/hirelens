@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:linear_progress_bar/linear_progress_bar.dart';
 
 import 'Widgets/CustomTextFields.dart';
 
@@ -10,78 +11,139 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _controller = PageController();
+
+  int _currentPage = -1;
+  final int totalSteps = 4;
+
+  void _nextPage() {
+    if (_currentPage < totalSteps - 1) {
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // Submit logic
+      Navigator.pushNamed(context, "/home");
+      print("✅ Registration Submitted!");
+    }
+  }
+
+  void _prevPage() {
+    if (_currentPage > -1) {
+      _controller.previousPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
-      body: Center(
+      backgroundColor: Colors.black,
+      body: SafeArea(
         child: SingleChildScrollView(
-          child: SizedBox(
-            height: 600,
-            width: width - 40,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  "Hirelens.",
-                  style: TextStyle(
-                    fontSize: 45,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              const SizedBox(height: 120),
+
+              // --- Title ---
+              const Text(
+                "Hirelens.",
+                style: TextStyle(
+                  fontSize: 45,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              SizedBox(height: 20),
+              // --- PageView (Steps) ---
+              SizedBox(
+                height: 350,
+                child: Center(
+                  child: PageView(
+                    controller: _controller,
+                    physics: const NeverScrollableScrollPhysics(),
+                    onPageChanged: (index) =>
+                        setState(() => _currentPage = index),
+                    children: [
+                      Align(
+                        alignment: AlignmentGeometry.center,
+                        child: StudioSoloSelector(
+                          onStudioTap: _nextPage,
+                          onSoloTap: _nextPage,
+                        ),
+                      ),
+
+                      const _PersonalDetails(),
+                      const _LocationDetails(),
+                      const _WelcomePage(),
+                    ],
                   ),
                 ),
-                Text(
-                  "Create an Account",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+              ),
 
-                SizedBox(height: 20),
+              const SizedBox(height: 30),
 
+              // --- Buttons (Next / Back) ---
+              if (_currentPage > 0) ...[
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(child: customTextField(placeholder: "First name")),
-                    SizedBox(width: 20),
-                    Expanded(child: customTextField(placeholder: "Last name")),
+                    if (_currentPage > 0 && _currentPage < totalSteps - 1) ...[
+                      ElevatedButton(
+                        onPressed: _prevPage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white.withOpacity(0.1),
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text("Back"),
+                      ),
+                      const SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: _nextPage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          minimumSize: const Size(150, 45),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text("Next"),
+                      ),
+                    ] else
+                      ElevatedButton(
+                        onPressed: _nextPage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          minimumSize: const Size(150, 45),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text("Let's go"),
+                      ),
                   ],
                 ),
+                const SizedBox(height: 30),
+              ],
 
-                SizedBox(height: 20),
-
-                customTextField(placeholder: "Enter your email"),
-                SizedBox(height: 20),
-
-                customTextField(placeholder: "Which camera do you have?"),
-                SizedBox(height: 20),
-
-                customTextField(
-                  placeholder: "Enter your password",
-                  isSecure: true,
-                ),
-                SizedBox(height: 20),
-
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/home');
-                    },
-                    child: Text("Submit"),
-                  ),
-                ),
-
-                Center(
+              // --- Bottom Sign-in ---
+              if (_currentPage < totalSteps - 1)
+                Align(
+                  alignment: Alignment.center,
                   child: TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: () => Navigator.pop(context),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
                         Text(
                           "Already have an Account?",
                           style: TextStyle(
@@ -96,22 +158,226 @@ class _RegisterState extends State<Register> {
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget customTextField({required String placeholder, bool isSecure = false}) {
-    return CustomTextField(placeholder: placeholder, isSecure: isSecure);
+Widget customTextField({required String placeholder, bool isSecure = false}) {
+  return CustomTextField(placeholder: placeholder, isSecure: isSecure);
+}
+
+// Type  Selector
+
+class StudioSoloSelector extends StatelessWidget {
+  final double size;
+  VoidCallback onStudioTap;
+  VoidCallback onSoloTap;
+
+  StudioSoloSelector({
+    super.key,
+    required this.onStudioTap,
+    required this.onSoloTap,
+    this.size = 100,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: size + 120,
+      child: Column(
+        children: [
+          const Text(
+            "Tell us, Who are you?",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // ---- Studio ----
+              GestureDetector(
+                onTap: onStudioTap,
+                child: Column(
+                  children: [
+                    SizedBox(height: 40),
+                    Container(
+                      width: size,
+                      height: size,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: const DecorationImage(
+                          scale: 1,
+                          image: AssetImage('assets/images/studio.jpg'),
+                          fit: BoxFit.fitWidth,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "Studio",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // ---- Separator ----
+              Container(
+                width: 2,
+                height: size - 50,
+                color: Colors.white.withOpacity(0.1),
+                margin: const EdgeInsets.symmetric(horizontal: 30),
+              ),
+
+              // ---- Solo ----
+              GestureDetector(
+                onTap: onSoloTap,
+                child: Column(
+                  children: [
+                    SizedBox(height: 40),
+                    Container(
+                      width: size,
+                      height: size,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+
+                        image: const DecorationImage(
+                          scale: 1,
+                          image: AssetImage('assets/images/solo.jpg'),
+                          fit: BoxFit.fitWidth,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "Solo",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PersonalDetails extends StatelessWidget {
+  const _PersonalDetails({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Tell us a bit about yourself.",
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+
+        SizedBox(height: 20),
+
+        Row(
+          children: [
+            Expanded(child: customTextField(placeholder: "First name")),
+            SizedBox(width: 20),
+            Expanded(child: customTextField(placeholder: "Last name")),
+          ],
+        ),
+
+        SizedBox(height: 20),
+
+        customTextField(placeholder: "Enter your email"),
+        SizedBox(height: 20),
+
+        customTextField(placeholder: "Enter your password", isSecure: true),
+        SizedBox(height: 20),
+
+        customTextField(placeholder: "Confirm your password", isSecure: true),
+      ],
+    );
+  }
+}
+
+class _LocationDetails extends StatelessWidget {
+  const _LocationDetails({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Tell us where you live?",
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+
+        SizedBox(height: 20),
+
+        customTextField(placeholder: "Enter your address"),
+        SizedBox(height: 20),
+
+        customTextField(placeholder: "Radius of area of service in KMs"),
+        SizedBox(height: 20),
+
+        customTextField(placeholder: "Enter the city you live in"),
+      ],
+    );
+  }
+}
+
+class _WelcomePage extends StatelessWidget {
+  const _WelcomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(child: Text("Welcome onboard, Utsav"));
   }
 }
