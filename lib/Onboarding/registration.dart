@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:linear_progress_bar/linear_progress_bar.dart';
-
+import 'package:hirelens/Onboarding/portfolio_details.dart';
 import 'Widgets/CustomTextFields.dart';
 
 class Register extends StatefulWidget {
@@ -14,7 +13,7 @@ class _RegisterState extends State<Register> {
   final _controller = PageController();
 
   int _currentPage = -1;
-  final int totalSteps = 4;
+  final int totalSteps = 5;
 
   void _nextPage() {
     if (_currentPage < totalSteps - 1) {
@@ -82,6 +81,7 @@ class _RegisterState extends State<Register> {
 
                       const _PersonalDetails(),
                       const _LocationDetails(),
+                      PortfolioDetails(),
                       const _WelcomePage(),
                     ],
                   ),
