@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hirelens/Onboarding/Utils/validation.dart';
 import 'package:hirelens/Onboarding/portfolio_details.dart';
 import 'Widgets/CustomTextFields.dart';
 
@@ -14,6 +15,8 @@ class _RegisterState extends State<Register> {
 
   int _currentPage = -1;
   final int totalSteps = 5;
+
+  bool userIsSoloPhotographer = false;
 
   void _nextPage() {
     if (_currentPage < totalSteps - 1) {
@@ -74,12 +77,22 @@ class _RegisterState extends State<Register> {
                       Align(
                         alignment: AlignmentGeometry.center,
                         child: StudioSoloSelector(
-                          onStudioTap: _nextPage,
-                          onSoloTap: _nextPage,
+                          onStudioTap: () {
+                            setState(() {
+                              userIsSoloPhotographer = false;
+                              _nextPage();
+                            });
+                          },
+                          onSoloTap: () {
+                            setState(() {
+                              userIsSoloPhotographer = true;
+                              _nextPage();
+                            });
+                          },
                         ),
                       ),
 
-                      const _PersonalDetails(),
+                      _PersonalDetails(isUserSolo: userIsSoloPhotographer),
                       const _LocationDetails(),
                       PortfolioDetails(),
                       const _WelcomePage(),
@@ -171,10 +184,6 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
-}
-
-Widget customTextField({required String placeholder, bool isSecure = false}) {
-  return CustomTextField(placeholder: placeholder, isSecure: isSecure);
 }
 
 // Type  Selector
@@ -302,41 +311,75 @@ class StudioSoloSelector extends StatelessWidget {
 }
 
 class _PersonalDetails extends StatelessWidget {
-  const _PersonalDetails({super.key});
+  bool isUserSolo = false;
+
+  _PersonalDetails({super.key, required this.isUserSolo});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text(
-          "Tell us a bit about yourself.",
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey,
-            fontWeight: FontWeight.w500,
+        if (isUserSolo) ...[
+          const Text(
+            "Tell us a bit about yourself.",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
 
-        SizedBox(height: 20),
+          SizedBox(height: 20),
 
-        Row(
-          children: [
-            Expanded(child: customTextField(placeholder: "First name")),
-            SizedBox(width: 20),
-            Expanded(child: customTextField(placeholder: "Last name")),
-          ],
-        ),
+          Row(
+            children: [
+              Expanded(child: CustomTextField(placeholder: "First name")),
+              SizedBox(width: 20),
+              Expanded(child: CustomTextField(placeholder: "Last name")),
+            ],
+          ),
 
-        SizedBox(height: 20),
+          SizedBox(height: 20),
 
-        customTextField(placeholder: "Enter your email"),
-        SizedBox(height: 20),
+          CustomTextField(
+            placeholder: "Enter your email",
+            enableVerification: true,
+            validator: isValidEmail,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          SizedBox(height: 20),
 
-        customTextField(placeholder: "Enter your password", isSecure: true),
-        SizedBox(height: 20),
+          CustomTextField(placeholder: "Enter your password", isSecure: true),
+          SizedBox(height: 20),
 
-        customTextField(placeholder: "Confirm your password", isSecure: true),
+          CustomTextField(placeholder: "Confirm your password", isSecure: true),
+        ] else ...[
+          const Text(
+            "Verify studio with GST Number",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+
+          SizedBox(height: 60),
+
+          CustomTextField(
+            placeholder: "Enter your GST Number",
+            enableVerification: true,
+            validator: isValidGST,
+          ),
+
+          SizedBox(height: 40),
+
+          CustomTextField(
+            placeholder: "Enter phone number",
+            enableVerification: true,
+            validator: (value) => value.length == 10,
+          ),
+        ],
       ],
     );
   }
@@ -361,13 +404,13 @@ class _LocationDetails extends StatelessWidget {
 
         SizedBox(height: 20),
 
-        customTextField(placeholder: "Enter your address"),
+        CustomTextField(placeholder: "Enter your address"),
         SizedBox(height: 20),
 
-        customTextField(placeholder: "Radius of area of service in KMs"),
+        CustomTextField(placeholder: "Radius of area of service in KMs"),
         SizedBox(height: 20),
 
-        customTextField(placeholder: "Enter the city you live in"),
+        CustomTextField(placeholder: "Enter the city you live in"),
       ],
     );
   }
