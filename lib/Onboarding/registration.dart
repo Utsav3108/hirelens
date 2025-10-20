@@ -93,7 +93,7 @@ class _RegisterState extends State<Register> {
                       ),
 
                       _PersonalDetails(isUserSolo: userIsSoloPhotographer),
-                      const _LocationDetails(),
+                      _LocationDetails(isUserSolo: userIsSoloPhotographer),
                       PortfolioDetails(),
                       const _WelcomePage(),
                     ],
@@ -375,7 +375,7 @@ class _PersonalDetails extends StatelessWidget {
           SizedBox(height: 40),
 
           CustomTextField(
-            placeholder: "Enter phone number",
+            placeholder: "Owner's Phone number",
             enableVerification: true,
             validator: (value) => value.length == 10,
           ),
@@ -386,7 +386,9 @@ class _PersonalDetails extends StatelessWidget {
 }
 
 class _LocationDetails extends StatelessWidget {
-  const _LocationDetails({super.key});
+  bool isUserSolo;
+
+  _LocationDetails({super.key, required this.isUserSolo});
 
   @override
   Widget build(BuildContext context) {
@@ -404,13 +406,25 @@ class _LocationDetails extends StatelessWidget {
 
         SizedBox(height: 20),
 
-        CustomTextField(placeholder: "Enter your address"),
+        CustomTextField(
+          placeholder: isUserSolo
+              ? "Enter your address"
+              : "Enter name of studio",
+        ),
         SizedBox(height: 20),
 
-        CustomTextField(placeholder: "Radius of area of service in KMs"),
+        CustomTextField(
+          placeholder: isUserSolo
+              ? "Radius of area of service in KMs"
+              : "Enter services you provide",
+        ),
         SizedBox(height: 20),
 
-        CustomTextField(placeholder: "Enter the city you live in"),
+        CustomTextField(
+          placeholder: isUserSolo
+              ? "Enter the city you live in"
+              : "Area or locality",
+        ),
       ],
     );
   }
@@ -421,6 +435,27 @@ class _WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("Welcome onboard, Utsav"));
+    return Column(
+      children: [
+        SizedBox(height: 50),
+        Image.asset(
+          "assets/images/Welcome-Page-Image.png",
+          width: 200,
+          height: 200,
+          fit: BoxFit.fitHeight,
+        ),
+        Spacer(),
+        Text(
+          "Welcome Utsav Pandya",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 10),
+        Text(
+          "Your next great shot starts right here — with Hirelens.",
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
   }
 }
