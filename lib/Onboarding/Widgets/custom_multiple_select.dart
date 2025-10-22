@@ -4,16 +4,24 @@ class CustomMultiSelectField extends StatefulWidget {
   final String placeholder;
   final List<String> options;
   final ValueChanged<List<String>>? onSelectionChanged;
+  final ValueChanged<bool>? onExpandChanged; // 👈 NEW callback
   final int gridCount;
   final bool enableAnimation;
+
+  // optional scroll handling
+  final ScrollController? scrollController;
+  final double? viewHeight;
 
   const CustomMultiSelectField({
     super.key,
     required this.placeholder,
     required this.options,
     this.onSelectionChanged,
+    this.onExpandChanged, // 👈 NEW
     this.gridCount = 4,
     this.enableAnimation = true,
+    this.scrollController,
+    this.viewHeight,
   });
 
   @override
@@ -27,6 +35,7 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
 
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  final GlobalKey _containerKey = GlobalKey();
 
   @override
   void initState() {
@@ -51,6 +60,12 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
         _controller.reverse();
       }
     });
+
+    // 🔔 Notify parent when expanded/collapsed
+    widget.onExpandChanged?.call(_expanded);
+
+    // try to scroll into view if expanded
+    if (_expanded) _scrollIntoVisibleArea();
   }
 
   void _toggleSelection(String item) {
@@ -62,6 +77,39 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
       }
     });
     widget.onSelectionChanged?.call(_selectedItems);
+  }
+
+  /// scroll parent view up when dropdown expands beyond visible view height
+  void _scrollIntoVisibleArea() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.scrollController == null ||
+          widget.viewHeight == null ||
+          !_expanded)
+        return;
+
+      final context = _containerKey.currentContext;
+      if (context == null) return;
+
+      final box = context.findRenderObject() as RenderBox?;
+      if (box == null) return;
+
+      final position = box.localToGlobal(Offset.zero);
+      final bottomY = position.dy + box.size.height;
+
+      // Only scroll if dropdown bottom exceeds visible area (like 350 px)
+      if (bottomY > widget.viewHeight!) {
+        final offset =
+            widget.scrollController!.offset +
+            (bottomY - widget.viewHeight!) +
+            20;
+
+        widget.scrollController!.animateTo(
+          offset,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   @override
@@ -83,21 +131,20 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
     return LayoutBuilder(
       builder: (context, constraints) {
         return Container(
+          key: _containerKey,
           padding: const EdgeInsets.all(12),
           width: constraints.maxWidth,
-          constraints: BoxConstraints(minHeight: 60),
+          constraints: const BoxConstraints(minHeight: 60),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: Colors.white24, width: 1),
           ),
           child: _selectedItems.isEmpty
-              ? Center(
-                  child: Align(
-                    alignment: AlignmentGeometry.topLeft,
-                    child: Text(
-                      widget.placeholder,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
+              ? Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.placeholder,
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                 )
               : Wrap(

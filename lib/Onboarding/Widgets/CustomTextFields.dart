@@ -109,6 +109,7 @@ class CustomTextFieldState extends State<CustomTextField> {
 
     if (selectedValue != null) {
       _controller.text = selectedValue;
+
       widget.onMenuItemSelected?.call(selectedValue);
     }
   }
@@ -118,7 +119,7 @@ class CustomTextFieldState extends State<CustomTextField> {
     return GestureDetector(
       onTapDown: (details) async {
         if (widget.isSelection) {
-          FocusScope.of(context).unfocus();
+          _focusNode.unfocus();
           await _showPopupMenu(context, details.globalPosition);
         } else {
           _focusNode.requestFocus();
@@ -128,6 +129,7 @@ class CustomTextFieldState extends State<CustomTextField> {
         absorbing: widget.isSelection,
         // prevent text editing for selection fields
         child: TextField(
+          textInputAction: TextInputAction.done,
           controller: _controller,
           focusNode: _focusNode,
           obscureText: _obscureText,

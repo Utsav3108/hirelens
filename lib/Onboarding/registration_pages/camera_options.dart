@@ -62,6 +62,16 @@ class CameraOptions extends StatelessWidget {
             const SizedBox(height: 20),
 
             CustomMultiSelectField(
+              placeholder: "Select lens",
+              options: lensType,
+              onSelectionChanged: (values) {
+                // handle selected cameras
+                print("Selected lens: $values");
+              },
+            ),
+            const SizedBox(height: 20),
+
+            CustomMultiSelectField(
               placeholder: "Select additional gears",
               options: gears,
               onSelectionChanged: (values) {

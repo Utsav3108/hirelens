@@ -81,118 +81,122 @@ class _RegisterState extends State<Register> {
 
     totalSteps = registrationPages.length;
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const SizedBox(height: 120),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                const SizedBox(height: 120),
 
-              // --- Title ---
-              const Text(
-                "Hirelens.",
-                style: TextStyle(
-                  fontSize: 45,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              SizedBox(height: 20),
-              // --- PageView (Steps) ---
-              SizedBox(
-                height: 350,
-                child: Center(
-                  child: PageView(
-                    controller: _controller,
-                    physics: const NeverScrollableScrollPhysics(),
-                    onPageChanged: (index) =>
-                        setState(() => _currentPage = index),
-                    children: registrationPages,
+                // --- Title ---
+                const Text(
+                  "Hirelens.",
+                  style: TextStyle(
+                    fontSize: 45,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 30),
-
-              // --- Buttons (Next / Back) ---
-              if (_currentPage > 0) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (_currentPage > 0 && _currentPage < totalSteps - 1) ...[
-                      ElevatedButton(
-                        onPressed: _prevPage,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(0.1),
-                          foregroundColor: Colors.white,
-                        ),
-                        child: const Text("Back"),
-                      ),
-                      const SizedBox(width: 20),
-                      ElevatedButton(
-                        onPressed: _nextPage,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          minimumSize: const Size(150, 45),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text("Next"),
-                      ),
-                    ] else
-                      ElevatedButton(
-                        onPressed: _nextPage,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          minimumSize: const Size(150, 45),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text("Let's go"),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-              ],
-
-              // --- Bottom Sign-in ---
-              if (_currentPage < totalSteps - 1)
-                Align(
-                  alignment: Alignment.center,
-                  child: TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Text(
-                          "Already have an Account?",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          "Sign In",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                SizedBox(height: 20),
+                // --- PageView (Steps) ---
+                SizedBox(
+                  height: 350,
+                  child: Center(
+                    child: PageView(
+                      controller: _controller,
+                      physics: const NeverScrollableScrollPhysics(),
+                      onPageChanged: (index) =>
+                          setState(() => _currentPage = index),
+                      children: registrationPages,
                     ),
                   ),
                 ),
-            ],
+
+                const SizedBox(height: 30),
+
+                // --- Buttons (Next / Back) ---
+                if (_currentPage > 0) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (_currentPage > 0 &&
+                          _currentPage < totalSteps - 1) ...[
+                        ElevatedButton(
+                          onPressed: _prevPage,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.1),
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text("Back"),
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton(
+                          onPressed: _nextPage,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            minimumSize: const Size(150, 45),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text("Next"),
+                        ),
+                      ] else
+                        ElevatedButton(
+                          onPressed: _nextPage,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            minimumSize: const Size(150, 45),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text("Let's go"),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                ],
+
+                // --- Bottom Sign-in ---
+                if (_currentPage < totalSteps - 1)
+                  Align(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Text(
+                            "Already have an Account?",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            "Sign In",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
