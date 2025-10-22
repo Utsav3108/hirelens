@@ -3,28 +3,11 @@ import '../Utils/validation.dart';
 import '../Widgets/CustomTextFields.dart';
 import '../Widgets/custom_multiple_select.dart';
 
-class CameraOptions extends StatelessWidget {
+class WorkDetails extends StatelessWidget {
   final bool isUserSolo;
 
-  CameraOptions({super.key, required this.isUserSolo});
+  WorkDetails({super.key, required this.isUserSolo});
 
-  final List<String> cameraCompanies = [
-    "Canon",
-    "Nikon",
-    "Sony",
-    "Fujifilm",
-    "Panasonic",
-    "Leica",
-    "Olympus",
-    "Pentax",
-    "GoPro",
-    "DJI",
-    "Blackmagic",
-    "Sigma",
-  ];
-
-  final List<String> cameraType = ["DSLR", "Mirrorless"];
-  final List<String> lensType = ["24-70mm f/2.8", "50mm f/1.8"];
   final List<String> photographyType = [
     "Wedding",
     "Event",
@@ -32,7 +15,10 @@ class CameraOptions extends StatelessWidget {
     "Product",
     "Portrait",
   ];
-  final List<String> gears = ["Gimbal", "Drone", "Lighting"];
+
+  final List<String> availabitiy = ["Freelance", "Full time"];
+
+  final List<String> editors = ["Lightroom", "Photoshop"];
 
   @override
   Widget build(BuildContext context) {
@@ -42,33 +28,44 @@ class CameraOptions extends StatelessWidget {
         children: [
           if (isUserSolo) ...[
             const Text(
-              "Tell us about your camera setup.",
+              "Tell us about your Work Experience.",
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             CustomMultiSelectField(
-              placeholder: "Select camera brands",
-              options: cameraCompanies,
+              placeholder: "Select services you provide",
+              options: photographyType,
               onSelectionChanged: (values) {
-                // handle selected cameras
-                print("Selected cameras: $values");
+                print("Selected photography types: $values");
               },
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
+            CustomTextField(
+              placeholder: "Years of experience",
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20),
+
+            CustomTextField(
+              placeholder: "Select your availability",
+              isSelection: true,
+              menuItems: availabitiy,
+            ),
+            SizedBox(height: 20),
+            //
             CustomMultiSelectField(
-              placeholder: "Select additional gears",
-              options: gears,
+              placeholder: "Select editors you use",
+              options: editors,
               onSelectionChanged: (values) {
-                print("Selected gears: $values");
+                print("Selected editors types: $values");
               },
             ),
-            const SizedBox(height: 20),
           ] else ...[
             const Text(
               "Verify studio with GST Number",
@@ -78,13 +75,17 @@ class CameraOptions extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 60),
+
+            SizedBox(height: 60),
+
             CustomTextField(
               placeholder: "Enter your GST Number",
               enableVerification: true,
               validator: isValidGST,
             ),
-            const SizedBox(height: 40),
+
+            SizedBox(height: 40),
+
             CustomTextField(
               keyboardType: TextInputType.number,
               placeholder: "Owner's Phone number",

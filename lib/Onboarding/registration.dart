@@ -6,6 +6,7 @@ import 'package:hirelens/Onboarding/registration_pages/personal_details.dart';
 import 'package:hirelens/Onboarding/registration_pages/portfolio_details.dart';
 import 'package:hirelens/Onboarding/registration_pages/studio_selection.dart';
 import 'package:hirelens/Onboarding/registration_pages/welcome_page.dart';
+import 'package:hirelens/Onboarding/registration_pages/work_details.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -17,10 +18,12 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final _controller = PageController();
 
-  int _currentPage = -1;
-  final int totalSteps = 5;
-
   bool userIsSoloPhotographer = false;
+
+  late List<Widget> registrationPages;
+
+  int _currentPage = -1;
+  late int totalSteps;
 
   void _nextPage() {
     if (_currentPage < totalSteps - 1) {
@@ -47,6 +50,36 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
+
+    registrationPages = [
+      //PopupMenuExample(),
+      Align(
+        alignment: AlignmentGeometry.center,
+        child: StudioSoloSelector(
+          onStudioTap: () {
+            setState(() {
+              userIsSoloPhotographer = false;
+              _nextPage();
+            });
+          },
+          onSoloTap: () {
+            setState(() {
+              userIsSoloPhotographer = true;
+              _nextPage();
+            });
+          },
+        ),
+      ),
+
+      PersonalDetails(isUserSolo: userIsSoloPhotographer),
+      CameraOptions(isUserSolo: userIsSoloPhotographer),
+      WorkDetails(isUserSolo: userIsSoloPhotographer),
+      PortfolioDetails(),
+
+      const WelcomePage(),
+    ];
+
+    totalSteps = registrationPages.length;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -77,33 +110,7 @@ class _RegisterState extends State<Register> {
                     physics: const NeverScrollableScrollPhysics(),
                     onPageChanged: (index) =>
                         setState(() => _currentPage = index),
-                    children: [
-                      //PopupMenuExample(),
-                      Align(
-                        alignment: AlignmentGeometry.center,
-                        child: StudioSoloSelector(
-                          onStudioTap: () {
-                            setState(() {
-                              userIsSoloPhotographer = false;
-
-                              _nextPage();
-                            });
-                          },
-                          onSoloTap: () {
-                            setState(() {
-                              userIsSoloPhotographer = true;
-                              _nextPage();
-                            });
-                          },
-                        ),
-                      ),
-
-                      PersonalDetails(isUserSolo: userIsSoloPhotographer),
-                      LocationDetails(isUserSolo: userIsSoloPhotographer),
-                      PortfolioDetails(),
-
-                      const WelcomePage(),
-                    ],
+                    children: registrationPages,
                   ),
                 ),
               ),

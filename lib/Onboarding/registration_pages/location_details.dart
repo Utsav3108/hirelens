@@ -24,11 +24,6 @@ class LocationDetails extends StatelessWidget {
         SizedBox(height: 20),
 
         CustomTextField(
-          isSelection: true,
-          menuItems: ["Ahmedabad", "Nikol"],
-          onMenuItemSelected: (value) {
-            print("item 1 selected");
-          },
           placeholder: isUserSolo
               ? "Enter your address"
               : "Enter name of studio",
@@ -40,14 +35,10 @@ class LocationDetails extends StatelessWidget {
               ? "Enter the city you live in"
               : "Area or locality",
         ),
+        SizedBox(height: 20),
 
         CustomTextField(
           placeholder: "Enter Pin code",
-          isSelection: true,
-          menuItems: ["345677", "567888"],
-          onMenuItemSelected: (value) {
-            print("item 1 selected");
-          },
           keyboardType: TextInputType.number,
         ),
       ],

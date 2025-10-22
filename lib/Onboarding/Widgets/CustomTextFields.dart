@@ -166,24 +166,3 @@ class CustomTextFieldState extends State<CustomTextField> {
     );
   }
 }
-
-/*
-* showMenu(
-                                context: context,
-                                positionBuilder: (context, constraints) {
-                                  return RelativeRect.fromLTRB(
-                                    10,
-                                    400,
-                                    200,
-                                    300,
-                                  );
-                                },
-                                items: [
-                                  PopupMenuItem<SampleItem>(
-                                    value: SampleItem.itemOne,
-                                    child: Text('Item 1'),
-                                  ),
-                                ],
-                              )
-*
-* */
