@@ -72,6 +72,7 @@ class _RegisterState extends State<Register> {
       ),
 
       PersonalDetails(isUserSolo: userIsSoloPhotographer),
+      LocationDetails(isUserSolo: userIsSoloPhotographer),
       CameraOptions(isUserSolo: userIsSoloPhotographer),
       WorkDetails(isUserSolo: userIsSoloPhotographer),
       PortfolioDetails(),

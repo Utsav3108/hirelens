@@ -66,70 +66,46 @@ class _WorkDetailsState extends State<WorkDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (widget.isUserSolo) ...[
-                const Text(
-                  "Tell us about your Work Experience.",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
+              const Text(
+                "Tell us about your Work Experience.",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
                 ),
-                const SizedBox(height: 20),
+              ),
+              const SizedBox(height: 20),
 
-                CustomMultiSelectField(
-                  placeholder: "Select services you provide",
-                  options: photographyType,
-                  onSelectionChanged: (values) {
-                    print("Selected photography types: $values");
-                  },
-                ),
-                const SizedBox(height: 20),
+              CustomMultiSelectField(
+                placeholder: "Select services you provide",
+                options: photographyType,
+                onSelectionChanged: (values) {
+                  print("Selected photography types: $values");
+                },
+              ),
+              const SizedBox(height: 20),
 
-                CustomTextField(
-                  placeholder: "Years of experience",
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 20),
+              CustomTextField(
+                placeholder: "Years of experience",
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 20),
 
-                CustomTextField(
-                  placeholder: "Select your availability",
-                  isSelection: true,
-                  menuItems: availability,
-                ),
-                const SizedBox(height: 20),
+              CustomTextField(
+                placeholder: "Select your availability",
+                isSelection: true,
+                menuItems: availability,
+              ),
+              const SizedBox(height: 20),
 
-                CustomMultiSelectField(
-                  key: _editorFieldKey,
-                  placeholder: "Select editors you use",
-                  options: editors,
-                  onSelectionChanged: (values) {
-                    print("Selected editors types: $values");
-                  },
-                ),
-              ] else ...[
-                const Text(
-                  "Verify studio with GST Number",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 60),
-                CustomTextField(
-                  placeholder: "Enter your GST Number",
-                  enableVerification: true,
-                  validator: isValidGST,
-                ),
-                const SizedBox(height: 40),
-                CustomTextField(
-                  keyboardType: TextInputType.number,
-                  placeholder: "Owner's Phone number",
-                  enableVerification: true,
-                  validator: (value) => value.length == 10,
-                ),
-              ],
+              CustomMultiSelectField(
+                key: _editorFieldKey,
+                placeholder: "Select editors you use",
+                options: editors,
+                onSelectionChanged: (values) {
+                  print("Selected editors types: $values");
+                },
+              ),
             ],
           ),
         );

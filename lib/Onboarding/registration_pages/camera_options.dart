@@ -40,68 +40,44 @@ class CameraOptions extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (isUserSolo) ...[
-            const Text(
-              "Tell us about your camera setup.",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
-              ),
+          const Text(
+            "Tell us about your camera setup.",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
             ),
-            const SizedBox(height: 20),
+          ),
+          const SizedBox(height: 20),
 
-            CustomMultiSelectField(
-              placeholder: "Select camera brands",
-              options: cameraCompanies,
-              onSelectionChanged: (values) {
-                // handle selected cameras
-                print("Selected cameras: $values");
-              },
-            ),
-            const SizedBox(height: 20),
+          CustomMultiSelectField(
+            placeholder: "Select camera brands",
+            options: cameraCompanies,
+            onSelectionChanged: (values) {
+              // handle selected cameras
+              print("Selected cameras: $values");
+            },
+          ),
+          const SizedBox(height: 20),
 
-            CustomMultiSelectField(
-              placeholder: "Select lens",
-              options: lensType,
-              onSelectionChanged: (values) {
-                // handle selected cameras
-                print("Selected lens: $values");
-              },
-            ),
-            const SizedBox(height: 20),
+          CustomMultiSelectField(
+            placeholder: "Select lens",
+            options: lensType,
+            onSelectionChanged: (values) {
+              // handle selected cameras
+              print("Selected lens: $values");
+            },
+          ),
+          const SizedBox(height: 20),
 
-            CustomMultiSelectField(
-              placeholder: "Select additional gears",
-              options: gears,
-              onSelectionChanged: (values) {
-                print("Selected gears: $values");
-              },
-            ),
-            const SizedBox(height: 20),
-          ] else ...[
-            const Text(
-              "Verify studio with GST Number",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 60),
-            CustomTextField(
-              placeholder: "Enter your GST Number",
-              enableVerification: true,
-              validator: isValidGST,
-            ),
-            const SizedBox(height: 40),
-            CustomTextField(
-              keyboardType: TextInputType.number,
-              placeholder: "Owner's Phone number",
-              enableVerification: true,
-              validator: (value) => value.length == 10,
-            ),
-          ],
+          CustomMultiSelectField(
+            placeholder: "Select additional gears",
+            options: gears,
+            onSelectionChanged: (values) {
+              print("Selected gears: $values");
+            },
+          ),
+          const SizedBox(height: 20),
         ],
       ),
     );
