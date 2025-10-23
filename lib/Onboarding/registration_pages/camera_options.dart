@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../Utils/validation.dart';
-import '../Widgets/CustomTextFields.dart';
 import '../Widgets/custom_multiple_select.dart';
 
 class CameraOptions extends StatelessWidget {
@@ -24,7 +22,9 @@ class CameraOptions extends StatelessWidget {
   ];
 
   final List<String> cameraType = ["DSLR", "Mirrorless"];
+
   final List<String> lensType = ["24-70mm f/2.8", "50mm f/1.8"];
+
   final List<String> photographyType = [
     "Wedding",
     "Event",
@@ -32,6 +32,7 @@ class CameraOptions extends StatelessWidget {
     "Product",
     "Portrait",
   ];
+
   final List<String> gears = ["Gimbal", "Drone", "Lighting"];
 
   final ScrollController controller = ScrollController();
