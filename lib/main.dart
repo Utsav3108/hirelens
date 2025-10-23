@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hirelens/Home/home.dart';
 import 'package:hirelens/Onboarding/login.dart';
-import 'package:hirelens/Onboarding/registration.dart'; // 👈 import your Register screen
+import 'package:hirelens/Onboarding/registration.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

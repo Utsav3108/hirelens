@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1095009168653",
+    "project_id": "search-my-photographer",
+    "storage_bucket": "search-my-photographer.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095009168653:android:0e832d24842226a586d444",
+        "android_client_info": {
+          "package_name": "com.utsav.hirelens"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc5Yr2-IJ_95fBzd8i8jphxUAzOR5Mrgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
