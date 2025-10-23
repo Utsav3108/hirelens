@@ -34,52 +34,65 @@ class CameraOptions extends StatelessWidget {
   ];
   final List<String> gears = ["Gimbal", "Drone", "Lighting"];
 
+  final ScrollController controller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text(
-            "Tell us about your camera setup.",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 20),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          controller: controller,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                "Tell us about your camera setup.",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 20),
 
-          CustomMultiSelectField(
-            placeholder: "Select camera brands",
-            options: cameraCompanies,
-            onSelectionChanged: (values) {
-              // handle selected cameras
-              print("Selected cameras: $values");
-            },
-          ),
-          const SizedBox(height: 20),
+              CustomMultiSelectField(
+                placeholder: "Select camera brands",
+                options: cameraCompanies,
+                scrollController: controller,
+                viewHeight: constraints.maxHeight,
+                onSelectionChanged: (values) {
+                  // handle selected cameras
+                  print("Selected cameras: $values");
+                },
+              ),
+              const SizedBox(height: 20),
 
-          CustomMultiSelectField(
-            placeholder: "Select lens",
-            options: lensType,
-            onSelectionChanged: (values) {
-              // handle selected cameras
-              print("Selected lens: $values");
-            },
-          ),
-          const SizedBox(height: 20),
+              CustomMultiSelectField(
+                placeholder: "Select lens",
+                options: lensType,
+                scrollController: controller,
+                viewHeight: constraints.maxHeight,
+                onSelectionChanged: (values) {
+                  // handle selected cameras
+                  print("Selected lens: $values");
+                },
+              ),
+              const SizedBox(height: 20),
 
-          CustomMultiSelectField(
-            placeholder: "Select additional gears",
-            options: gears,
-            onSelectionChanged: (values) {
-              print("Selected gears: $values");
-            },
+              CustomMultiSelectField(
+                placeholder: "Select additional gears",
+                options: gears,
+                scrollController: controller,
+                viewHeight: constraints.maxHeight,
+                onSelectionChanged: (values) {
+                  print("Selected gears: $values");
+                },
+              ),
+              const SizedBox(height: 20),
+            ],
           ),
-          const SizedBox(height: 20),
-        ],
-      ),
+        );
+      },
     );
   }
 }

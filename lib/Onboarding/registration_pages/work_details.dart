@@ -25,7 +25,20 @@ class _WorkDetailsState extends State<WorkDetails> {
 
   final List<String> availability = ["Freelance", "Full time"];
 
-  final List<String> editors = ["Lightroom", "Photoshop", "Final Cut Pro"];
+  final List<String> editors = [
+    "Lightroom",
+    "Photoshop",
+    "Final Cut Pro",
+    "Lighroom",
+    "Photoshp",
+    "Final Cut ro",
+    "Lightroom",
+    "Photoshop",
+    "Final Cut Pro",
+    "Lighroom",
+    "Photoshp",
+    "Final Cut ro",
+  ];
 
   void scrollIntoVisibleArea(GlobalKey targetKey, double viewHeight) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -43,8 +56,20 @@ class _WorkDetailsState extends State<WorkDetails> {
       // scroll just enough to make it visible
       if (bottomY > viewHeight) {
         final offset = scrollController.offset + (bottomY - viewHeight);
+
+        print("==> Scroll Positions : ${scrollController.position}");
+        print(
+          "==> maxScrollExtent: ${scrollController.position.maxScrollExtent}",
+        );
+        print(
+          "==> minScrollExtent: ${scrollController.position.minScrollExtent}",
+        );
+        print("==> extentTotal: ${scrollController.position.extentTotal}");
+        print("==> outOfRange: ${scrollController.position.outOfRange}");
+        print("==> offset: ${scrollController.offset}");
+
         scrollController.animateTo(
-          offset,
+          scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 400),
           curve: Curves.easeInOut,
         );
@@ -79,6 +104,8 @@ class _WorkDetailsState extends State<WorkDetails> {
               CustomMultiSelectField(
                 placeholder: "Select services you provide",
                 options: photographyType,
+                scrollController: scrollController,
+                viewHeight: viewHeight,
                 onSelectionChanged: (values) {
                   print("Selected photography types: $values");
                 },
@@ -102,6 +129,8 @@ class _WorkDetailsState extends State<WorkDetails> {
                 key: _editorFieldKey,
                 placeholder: "Select editors you use",
                 options: editors,
+                scrollController: scrollController,
+                viewHeight: viewHeight,
                 onSelectionChanged: (values) {
                   print("Selected editors types: $values");
                 },

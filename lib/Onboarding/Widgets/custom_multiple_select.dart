@@ -4,7 +4,6 @@ class CustomMultiSelectField extends StatefulWidget {
   final String placeholder;
   final List<String> options;
   final ValueChanged<List<String>>? onSelectionChanged;
-  final ValueChanged<bool>? onExpandChanged; // 👈 NEW callback
   final int gridCount;
   final bool enableAnimation;
 
@@ -17,7 +16,6 @@ class CustomMultiSelectField extends StatefulWidget {
     required this.placeholder,
     required this.options,
     this.onSelectionChanged,
-    this.onExpandChanged, // 👈 NEW
     this.gridCount = 4,
     this.enableAnimation = true,
     this.scrollController,
@@ -52,20 +50,45 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
   }
 
   void _toggleExpanded() {
-    setState(() {
-      _expanded = !_expanded;
-      if (_expanded) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
-    });
+    final wasExpanded = _expanded;
+    setState(() => _expanded = !_expanded);
 
-    // 🔔 Notify parent when expanded/collapsed
-    widget.onExpandChanged?.call(_expanded);
+    if (!wasExpanded && _expanded) {
+      // expanding
 
-    // try to scroll into view if expanded
-    if (_expanded) _scrollIntoVisibleArea();
+      _controller.forward().then((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (widget.scrollController == null ||
+              widget.scrollController!.position.maxScrollExtent == 0) {
+            return;
+          }
+
+          _scrollIntoVisibleArea();
+        });
+      });
+    } else if (wasExpanded && !_expanded) {
+      // collapsing
+      _controller.reverse().then((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (widget.scrollController == null) return;
+
+          final ScrollController scrollController = widget.scrollController!;
+
+          print("==> Scroll Positions : ${scrollController.position}");
+          print(
+            "==> maxScrollExtent: ${scrollController.position.maxScrollExtent}",
+          );
+          print(
+            "==> minScrollExtent: ${scrollController.position.minScrollExtent}",
+          );
+          print("==> extentTotal: ${scrollController.position.extentTotal}");
+          print("==> outOfRange: ${scrollController.position.outOfRange}");
+          print("==> offset: ${scrollController.offset}");
+
+          _scrollBackAfterCollapse();
+        });
+      });
+    }
   }
 
   void _toggleSelection(String item) {
@@ -79,37 +102,67 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
     widget.onSelectionChanged?.call(_selectedItems);
   }
 
-  /// scroll parent view up when dropdown expands beyond visible view height
+  /// When expanded, scroll just enough so entire grid fits in view
   void _scrollIntoVisibleArea() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.scrollController == null ||
-          widget.viewHeight == null ||
-          !_expanded)
-        return;
+    if (widget.scrollController == null ||
+        widget.viewHeight == null ||
+        !_expanded)
+      return;
 
-      final context = _containerKey.currentContext;
-      if (context == null) return;
+    final context = _containerKey.currentContext;
+    if (context == null) return;
 
-      final box = context.findRenderObject() as RenderBox?;
-      if (box == null) return;
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null) return;
 
-      final position = box.localToGlobal(Offset.zero);
-      final bottomY = position.dy + box.size.height;
+    final position = box.localToGlobal(Offset.zero);
+    final bottomY = position.dy + box.size.height;
+    final screenHeight = widget.viewHeight!;
 
-      // Only scroll if dropdown bottom exceeds visible area (like 350 px)
-      if (bottomY > widget.viewHeight!) {
-        final offset =
-            widget.scrollController!.offset +
-            (bottomY - widget.viewHeight!) +
-            20;
+    if (bottomY > screenHeight) {
+      final offset =
+          widget.scrollController!.offset +
+          (bottomY - screenHeight) +
+          20; // a bit of margin
 
-        widget.scrollController!.animateTo(
-          offset,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
+      _safeAnimateTo(offset);
+    }
+  }
+
+  /// When collapsed, scroll up to remove bottom gap if any
+  void _scrollBackAfterCollapse() {
+    if (widget.scrollController == null || widget.viewHeight == null) return;
+
+    final currentOffset = widget.scrollController!.offset;
+    if (currentOffset <= 0) return;
+
+    final context = _containerKey.currentContext;
+    if (context == null) return;
+
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null) return;
+
+    final position = box.localToGlobal(Offset.zero);
+    final bottomY = position.dy + box.size.height;
+    final screenHeight = widget.viewHeight!;
+
+    // if current content bottom is well within visible area, scroll up a bit
+    if (bottomY < screenHeight - 100) {
+      final targetOffset = (currentOffset - 120).clamp(
+        widget.scrollController!.position.minScrollExtent,
+        widget.scrollController!.position.maxScrollExtent,
+      );
+      _safeAnimateTo(targetOffset);
+    }
+  }
+
+  void _safeAnimateTo(double offset) {
+    if (!widget.scrollController!.hasClients) return;
+    widget.scrollController!.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -216,7 +269,13 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
             },
           ),
           const SizedBox(height: 20),
-          ElevatedButton(onPressed: _toggleExpanded, child: const Text("Done")),
+          SizedBox(
+            height: 40,
+            child: ElevatedButton(
+              onPressed: _toggleExpanded,
+              child: const Text("Done"),
+            ),
+          ),
         ],
       ),
     );
