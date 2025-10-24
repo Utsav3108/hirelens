@@ -9,71 +9,85 @@ class PersonalDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        if (isUserSolo) ...[
-          const Text(
-            "Tell us a bit about yourself.",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (isUserSolo) ...[
+            const Text(
+              "Tell us a bit about yourself.",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
 
-          SizedBox(height: 20),
+            SizedBox(height: 20),
 
-          Row(
-            children: [
-              Expanded(child: CustomTextField(placeholder: "First name")),
-              SizedBox(width: 20),
-              Expanded(child: CustomTextField(placeholder: "Last name")),
-            ],
-          ),
-
-          SizedBox(height: 20),
-
-          CustomTextField(
-            placeholder: "Enter your email",
-            enableVerification: true,
-            validator: isValidEmail,
-            keyboardType: TextInputType.emailAddress,
-          ),
-          SizedBox(height: 20),
-
-          CustomTextField(placeholder: "Enter your password", isSecure: true),
-          SizedBox(height: 20),
-
-          CustomTextField(placeholder: "Confirm your password", isSecure: true),
-        ] else ...[
-          const Text(
-            "Verify studio with GST Number",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
+            Row(
+              children: [
+                Expanded(child: CustomTextField(placeholder: "First name")),
+                SizedBox(width: 20),
+                Expanded(child: CustomTextField(placeholder: "Last name")),
+              ],
             ),
-          ),
 
-          SizedBox(height: 60),
+            SizedBox(height: 20),
 
-          CustomTextField(
-            placeholder: "Enter your GST Number",
-            enableVerification: true,
-            validator: isValidGST,
-          ),
+            CustomTextField(
+              placeholder: "Enter your email",
+              enableVerification: true,
+              validator: isValidEmail,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            SizedBox(height: 20),
 
-          SizedBox(height: 40),
+            CustomTextField(placeholder: "Enter your password", isSecure: true),
+            SizedBox(height: 20),
 
-          CustomTextField(
-            keyboardType: TextInputType.number,
-            placeholder: "Owner's Phone number",
-            enableVerification: true,
-            validator: (value) => value.length == 10,
-          ),
+            CustomTextField(
+              placeholder: "Confirm your password",
+              isSecure: true,
+            ),
+          ] else ...[
+            const Text(
+              "Verify studio with GST Number",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+
+            SizedBox(height: 20),
+
+            CustomTextField(
+              placeholder: "Enter your studio's GST Number",
+              enableVerification: true,
+              validator: isValidGST,
+            ),
+
+            SizedBox(height: 20),
+
+            CustomTextField(
+              keyboardType: TextInputType.number,
+              placeholder: "Owner's email address",
+              enableVerification: true,
+              validator: (value) => value.length == 10,
+            ),
+            SizedBox(height: 20),
+
+            CustomTextField(placeholder: "Enter your password", isSecure: true),
+            SizedBox(height: 20),
+
+            CustomTextField(
+              placeholder: "Confirm your password",
+              isSecure: true,
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
