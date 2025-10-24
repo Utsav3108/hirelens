@@ -14,6 +14,9 @@ class WorkDetails extends StatefulWidget {
 class _WorkDetailsState extends State<WorkDetails> {
   final ScrollController scrollController = ScrollController();
 
+  final TextEditingController yearsController = TextEditingController();
+  final TextEditingController availabilityController = TextEditingController();
+
   final List<String> photographyType = [
     "Wedding",
     "Event",
@@ -68,12 +71,14 @@ class _WorkDetailsState extends State<WorkDetails> {
               const SizedBox(height: 20),
 
               CustomTextField(
+                controller: yearsController,
                 placeholder: "Years of experience",
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 20),
 
               CustomTextField(
+                controller: availabilityController,
                 placeholder: "Select your availability",
                 isSelection: true,
                 menuItems: availability,

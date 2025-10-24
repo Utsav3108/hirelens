@@ -5,7 +5,13 @@ import '../Widgets/CustomTextFields.dart';
 class LocationDetails extends StatelessWidget {
   final bool isUserSolo;
 
-  const LocationDetails({super.key, required this.isUserSolo});
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController areaController = TextEditingController();
+  final TextEditingController pincodeController = TextEditingController();
+
+  final TextEditingController emailController = TextEditingController();
+
+  LocationDetails({super.key, required this.isUserSolo});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +30,7 @@ class LocationDetails extends StatelessWidget {
         SizedBox(height: 20),
 
         CustomTextField(
+          controller: addressController,
           placeholder: isUserSolo
               ? "Enter your address"
               : "Enter name of studio",
@@ -31,6 +38,7 @@ class LocationDetails extends StatelessWidget {
         SizedBox(height: 20),
 
         CustomTextField(
+          controller: areaController,
           placeholder: isUserSolo
               ? "Enter the city you live in"
               : "Area or locality",
@@ -38,6 +46,7 @@ class LocationDetails extends StatelessWidget {
         SizedBox(height: 20),
 
         CustomTextField(
+          controller: pincodeController,
           placeholder: "Enter Pin code",
           keyboardType: TextInputType.number,
         ),

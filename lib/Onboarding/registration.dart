@@ -7,6 +7,38 @@ import 'package:hirelens/Onboarding/registration_pages/portfolio_details.dart';
 import 'package:hirelens/Onboarding/registration_pages/studio_selection.dart';
 import 'package:hirelens/Onboarding/registration_pages/welcome_page.dart';
 import 'package:hirelens/Onboarding/registration_pages/work_details.dart';
+import 'package:hirelens/Onboarding/repos/onboarding_repo.dart';
+
+class RegUser {
+  late bool isSoloPhotographer;
+  String email = "";
+  String password = "";
+  late String firstName;
+  late String lastName;
+
+  late Address address;
+  late CameraDetails cameraDetails;
+  late WorkExperience workEx;
+}
+
+class Address {
+  late String address;
+  late String city;
+  late String pincode;
+}
+
+class CameraDetails {
+  late List<String> cameraBrand;
+  late List<String> lens;
+  late List<String> additionalGears;
+}
+
+class WorkExperience {
+  late List<String> services;
+  late List<String> editors;
+  late String availability;
+  late int yearsOfExperience;
+}
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -20,6 +52,8 @@ class _RegisterState extends State<Register> {
 
   bool userIsSoloPhotographer = false;
 
+  late RegUser user = RegUser();
+
   late List<Widget> registrationPages;
 
   int _currentPage = -1;
@@ -27,6 +61,11 @@ class _RegisterState extends State<Register> {
 
   void _nextPage() {
     if (_currentPage < totalSteps - 1) {
+      if (_currentPage == 1) {
+        register(email: user.email, password: user.password);
+        return;
+      }
+
       _controller.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
@@ -71,7 +110,7 @@ class _RegisterState extends State<Register> {
         ),
       ),
 
-      PersonalDetails(isUserSolo: userIsSoloPhotographer),
+      PersonalDetails(isUserSolo: userIsSoloPhotographer, user: user),
       LocationDetails(isUserSolo: userIsSoloPhotographer),
       CameraOptions(isUserSolo: userIsSoloPhotographer),
       WorkDetails(isUserSolo: userIsSoloPhotographer),

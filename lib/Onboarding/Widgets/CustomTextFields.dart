@@ -7,6 +7,7 @@ class CustomTextField extends StatefulWidget {
   final bool enableVerification;
   final bool Function(String)? validator; // returns true if valid
   final bool isSelection;
+  final TextEditingController controller;
 
   /// Optional popup menu items (only used if isSelection = true)
   final List<String>? menuItems;
@@ -14,9 +15,13 @@ class CustomTextField extends StatefulWidget {
   /// Optional callback when a menu item is selected
   final void Function(String)? onMenuItemSelected;
 
+  final void Function(String)? onValueChange;
+
   const CustomTextField({
     super.key,
     required this.placeholder,
+
+    required this.controller,
     this.isSecure = false,
     this.keyboardType = TextInputType.text,
     this.enableVerification = false,
@@ -24,6 +29,7 @@ class CustomTextField extends StatefulWidget {
     this.isSelection = false,
     this.menuItems,
     this.onMenuItemSelected,
+    this.onValueChange,
   });
 
   @override
@@ -33,7 +39,7 @@ class CustomTextField extends StatefulWidget {
 class CustomTextFieldState extends State<CustomTextField> {
   late bool _obscureText;
   bool _isValid = false;
-  final TextEditingController _controller = TextEditingController();
+  late final TextEditingController _controller = widget.controller;
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -129,6 +135,7 @@ class CustomTextFieldState extends State<CustomTextField> {
         absorbing: widget.isSelection,
         // prevent text editing for selection fields
         child: TextField(
+          onChanged: widget.onValueChange,
           textInputAction: TextInputAction.done,
           controller: _controller,
           focusNode: _focusNode,

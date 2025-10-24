@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hirelens/Onboarding/repos/onboarding_repo.dart';
 import 'Widgets/CustomTextFields.dart';
 
 class Login extends StatefulWidget {
@@ -11,6 +12,14 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void handleLogin({required String email, required String password}) {
+    login(email: email, password: password);
+    Navigator.pushNamed(context, '/home');
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -45,19 +54,26 @@ class _LoginState extends State<Login> {
 
                 SizedBox(height: 30),
 
-                customTextField(placeholder: "Enter your email"),
+                CustomTextField(
+                  placeholder: "Enter your email",
+                  controller: emailController,
+                ),
                 SizedBox(height: 20),
 
-                customTextField(
+                CustomTextField(
                   placeholder: "Enter your password",
                   isSecure: true,
+                  controller: passwordController,
                 ),
                 SizedBox(height: 20),
 
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/home');
+                      handleLogin(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -117,9 +133,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  Widget customTextField({required String placeholder, bool isSecure = false}) {
-    return CustomTextField(placeholder: placeholder, isSecure: isSecure);
   }
 }

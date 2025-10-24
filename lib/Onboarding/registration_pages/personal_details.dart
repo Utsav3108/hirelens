@@ -1,11 +1,31 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hirelens/Onboarding/registration.dart';
 import '../Utils/validation.dart';
 import '../Widgets/CustomTextFields.dart';
 
-class PersonalDetails extends StatelessWidget {
+class PersonalDetails extends StatefulWidget {
   final bool isUserSolo;
+  RegUser user;
 
-  const PersonalDetails({super.key, required this.isUserSolo});
+  PersonalDetails({super.key, required this.isUserSolo, required this.user});
+
+  @override
+  State<PersonalDetails> createState() => _PersonalDetailsState();
+}
+
+class _PersonalDetailsState extends State<PersonalDetails> {
+  final TextEditingController firstController = TextEditingController();
+
+  final TextEditingController lastController = TextEditingController();
+
+  final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController passwdController = TextEditingController();
+
+  final TextEditingController confirmPasswdController = TextEditingController();
+
+  final TextEditingController gstController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +33,7 @@ class PersonalDetails extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (isUserSolo) ...[
+          if (widget.isUserSolo) ...[
             const Text(
               "Tell us a bit about yourself.",
               style: TextStyle(
@@ -27,26 +47,51 @@ class PersonalDetails extends StatelessWidget {
 
             Row(
               children: [
-                Expanded(child: CustomTextField(placeholder: "First name")),
+                Expanded(
+                  child: CustomTextField(
+                    controller: firstController,
+                    placeholder: "First name",
+                    onValueChange: (firstname) {
+                      widget.user.firstName = firstname;
+                    },
+                  ),
+                ),
                 SizedBox(width: 20),
-                Expanded(child: CustomTextField(placeholder: "Last name")),
+                Expanded(
+                  child: CustomTextField(
+                    controller: lastController,
+                    placeholder: "Last name",
+                  ),
+                ),
               ],
             ),
 
             SizedBox(height: 20),
 
             CustomTextField(
+              controller: emailController,
               placeholder: "Enter your email",
+              onValueChange: (email) {
+                widget.user.email = email;
+              },
               enableVerification: true,
               validator: isValidEmail,
               keyboardType: TextInputType.emailAddress,
             ),
             SizedBox(height: 20),
 
-            CustomTextField(placeholder: "Enter your password", isSecure: true),
+            CustomTextField(
+              controller: passwdController,
+              placeholder: "Enter your password",
+              isSecure: true,
+              onValueChange: (password) {
+                widget.user.password = password;
+              },
+            ),
             SizedBox(height: 20),
 
             CustomTextField(
+              controller: confirmPasswdController,
               placeholder: "Confirm your password",
               isSecure: true,
             ),
@@ -63,6 +108,7 @@ class PersonalDetails extends StatelessWidget {
             SizedBox(height: 20),
 
             CustomTextField(
+              controller: gstController,
               placeholder: "Enter your studio's GST Number",
               enableVerification: true,
               validator: isValidGST,
@@ -71,6 +117,7 @@ class PersonalDetails extends StatelessWidget {
             SizedBox(height: 20),
 
             CustomTextField(
+              controller: emailController,
               keyboardType: TextInputType.number,
               placeholder: "Owner's email address",
               enableVerification: true,
@@ -78,10 +125,15 @@ class PersonalDetails extends StatelessWidget {
             ),
             SizedBox(height: 20),
 
-            CustomTextField(placeholder: "Enter your password", isSecure: true),
+            CustomTextField(
+              controller: passwdController,
+              placeholder: "Enter your password",
+              isSecure: true,
+            ),
             SizedBox(height: 20),
 
             CustomTextField(
+              controller: confirmPasswdController,
               placeholder: "Confirm your password",
               isSecure: true,
             ),
