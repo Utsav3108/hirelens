@@ -4,17 +4,12 @@ import 'package:hirelens/Onboarding/registration.dart';
 import '../Utils/validation.dart';
 import '../Widgets/CustomTextFields.dart';
 
-class PersonalDetails extends StatefulWidget {
+class PersonalDetails extends StatelessWidget {
   final bool isUserSolo;
-  RegUser user;
+  final RegUser user;
 
   PersonalDetails({super.key, required this.isUserSolo, required this.user});
 
-  @override
-  State<PersonalDetails> createState() => _PersonalDetailsState();
-}
-
-class _PersonalDetailsState extends State<PersonalDetails> {
   final TextEditingController firstController = TextEditingController();
 
   final TextEditingController lastController = TextEditingController();
@@ -33,7 +28,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (widget.isUserSolo) ...[
+          if (isUserSolo) ...[
             const Text(
               "Tell us a bit about yourself.",
               style: TextStyle(
@@ -52,13 +47,14 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                     controller: firstController,
                     placeholder: "First name",
                     onValueChange: (firstname) {
-                      widget.user.firstName = firstname;
+                      user.firstName = firstname;
                     },
                   ),
                 ),
                 SizedBox(width: 20),
                 Expanded(
                   child: CustomTextField(
+                    onValueChange: (lastName) => user.lastName = lastName,
                     controller: lastController,
                     placeholder: "Last name",
                   ),
@@ -72,7 +68,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               controller: emailController,
               placeholder: "Enter your email",
               onValueChange: (email) {
-                widget.user.email = email;
+                user.email = email;
               },
               enableVerification: true,
               validator: isValidEmail,
@@ -85,7 +81,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               placeholder: "Enter your password",
               isSecure: true,
               onValueChange: (password) {
-                widget.user.password = password;
+                user.password = password;
               },
             ),
             SizedBox(height: 20),

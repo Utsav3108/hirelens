@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hirelens/Onboarding/registration.dart';
 import '../Widgets/custom_multiple_select.dart';
 
 class CameraOptions extends StatelessWidget {
   final bool isUserSolo;
+  final RegUser user;
 
-  CameraOptions({super.key, required this.isUserSolo});
+  CameraOptions({super.key, required this.isUserSolo, required this.user});
 
   final List<String> cameraCompanies = [
     "Canon",
@@ -61,9 +63,10 @@ class CameraOptions extends StatelessWidget {
                 options: cameraCompanies,
                 scrollController: controller,
                 viewHeight: constraints.maxHeight,
-                onSelectionChanged: (values) {
+                onSelectionChanged: (brands) {
                   // handle selected cameras
-                  print("Selected cameras: $values");
+                  print("Selected cameras: $brands");
+                  user.cameraDetails.cameraBrand = brands;
                 },
               ),
               const SizedBox(height: 20),
@@ -73,9 +76,10 @@ class CameraOptions extends StatelessWidget {
                 options: lensType,
                 scrollController: controller,
                 viewHeight: constraints.maxHeight,
-                onSelectionChanged: (values) {
+                onSelectionChanged: (lens) {
                   // handle selected cameras
-                  print("Selected lens: $values");
+                  print("Selected lens: $lens");
+                  user.cameraDetails.lens = lens;
                 },
               ),
               const SizedBox(height: 20),
@@ -85,8 +89,9 @@ class CameraOptions extends StatelessWidget {
                 options: gears,
                 scrollController: controller,
                 viewHeight: constraints.maxHeight,
-                onSelectionChanged: (values) {
-                  print("Selected gears: $values");
+                onSelectionChanged: (gears) {
+                  print("Selected gears: $gears");
+                  user.cameraDetails.additionalGears = gears;
                 },
               ),
               const SizedBox(height: 20),

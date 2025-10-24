@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hirelens/Onboarding/registration.dart';
 import '../Widgets/CustomTextFields.dart';
 import '../Widgets/custom_multiple_select.dart';
 
 class WorkDetails extends StatefulWidget {
   final bool isUserSolo;
+  final RegUser user;
 
-  const WorkDetails({super.key, required this.isUserSolo});
+  const WorkDetails({super.key, required this.isUserSolo, required this.user});
 
   @override
   State<WorkDetails> createState() => _WorkDetailsState();
@@ -16,6 +18,8 @@ class _WorkDetailsState extends State<WorkDetails> {
 
   final TextEditingController yearsController = TextEditingController();
   final TextEditingController availabilityController = TextEditingController();
+
+  late final RegUser user = widget.user;
 
   final List<String> photographyType = [
     "Wedding",
@@ -64,13 +68,15 @@ class _WorkDetailsState extends State<WorkDetails> {
                 options: photographyType,
                 scrollController: scrollController,
                 viewHeight: viewHeight,
-                onSelectionChanged: (values) {
-                  print("Selected photography types: $values");
+                onSelectionChanged: (services) {
+                  print("Selected photography types: $services");
+                  user.workEx.services = services;
                 },
               ),
               const SizedBox(height: 20),
 
               CustomTextField(
+                onValueChange: (exp) => user.workEx.yearsOfExperience = exp,
                 controller: yearsController,
                 placeholder: "Years of experience",
                 keyboardType: TextInputType.number,
@@ -82,6 +88,8 @@ class _WorkDetailsState extends State<WorkDetails> {
                 placeholder: "Select your availability",
                 isSelection: true,
                 menuItems: availability,
+                onMenuItemSelected: (status) =>
+                    user.workEx.availability = status,
               ),
               const SizedBox(height: 20),
 
@@ -91,8 +99,9 @@ class _WorkDetailsState extends State<WorkDetails> {
                 options: editors,
                 scrollController: scrollController,
                 viewHeight: viewHeight,
-                onSelectionChanged: (values) {
-                  print("Selected editors types: $values");
+                onSelectionChanged: (editors) {
+                  print("Selected editors types: $editors");
+                  user.workEx.editors = editors;
                 },
               ),
             ],

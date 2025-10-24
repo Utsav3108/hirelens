@@ -9,35 +9,73 @@ import 'package:hirelens/Onboarding/registration_pages/welcome_page.dart';
 import 'package:hirelens/Onboarding/registration_pages/work_details.dart';
 import 'package:hirelens/Onboarding/repos/onboarding_repo.dart';
 
+import 'dart:convert';
+
 class RegUser {
-  late bool isSoloPhotographer;
+  bool isSoloPhotographer = false;
   String email = "";
   String password = "";
-  late String firstName;
-  late String lastName;
+  String firstName = "";
+  String lastName = "";
+  Address address = Address();
+  CameraDetails cameraDetails = CameraDetails();
+  WorkExperience workEx = WorkExperience();
 
-  late Address address;
-  late CameraDetails cameraDetails;
-  late WorkExperience workEx;
+  /// Converts the object to a Map
+  Map<String, dynamic> toJson() => {
+    'isSoloPhotographer': isSoloPhotographer,
+    'email': email,
+    'password': password,
+    'firstName': firstName,
+    'lastName': lastName,
+    'address': address.toJson(),
+    'cameraDetails': cameraDetails.toJson(),
+    'workEx': workEx.toJson(),
+  };
+
+  /// Prints the object in pretty JSON format
+  void printAsJson() {
+    final jsonStr = const JsonEncoder.withIndent('  ').convert(toJson());
+    print(jsonStr);
+  }
 }
 
 class Address {
-  late String address;
-  late String city;
-  late String pincode;
+  String address = "";
+  String city = "";
+  String pincode = "";
+
+  Map<String, dynamic> toJson() => {
+    'address': address,
+    'city': city,
+    'pincode': pincode,
+  };
 }
 
 class CameraDetails {
-  late List<String> cameraBrand;
-  late List<String> lens;
-  late List<String> additionalGears;
+  List<String> cameraBrand = [];
+  List<String> lens = [];
+  List<String> additionalGears = [];
+
+  Map<String, dynamic> toJson() => {
+    'cameraBrand': cameraBrand,
+    'lens': lens,
+    'additionalGears': additionalGears,
+  };
 }
 
 class WorkExperience {
-  late List<String> services;
-  late List<String> editors;
-  late String availability;
-  late int yearsOfExperience;
+  List<String> services = [];
+  List<String> editors = [];
+  String availability = "";
+  String yearsOfExperience = "0";
+
+  Map<String, dynamic> toJson() => {
+    'services': services,
+    'editors': editors,
+    'availability': availability,
+    'yearsOfExperience': yearsOfExperience,
+  };
 }
 
 class Register extends StatefulWidget {
@@ -61,11 +99,6 @@ class _RegisterState extends State<Register> {
 
   void _nextPage() {
     if (_currentPage < totalSteps - 1) {
-      if (_currentPage == 1) {
-        register(email: user.email, password: user.password);
-        return;
-      }
-
       _controller.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
@@ -98,12 +131,14 @@ class _RegisterState extends State<Register> {
           onStudioTap: () {
             setState(() {
               userIsSoloPhotographer = false;
+              user.isSoloPhotographer = userIsSoloPhotographer;
               _nextPage();
             });
           },
           onSoloTap: () {
             setState(() {
               userIsSoloPhotographer = true;
+              user.isSoloPhotographer = userIsSoloPhotographer;
               _nextPage();
             });
           },
@@ -111,12 +146,12 @@ class _RegisterState extends State<Register> {
       ),
 
       PersonalDetails(isUserSolo: userIsSoloPhotographer, user: user),
-      LocationDetails(isUserSolo: userIsSoloPhotographer),
-      CameraOptions(isUserSolo: userIsSoloPhotographer),
-      WorkDetails(isUserSolo: userIsSoloPhotographer),
+      LocationDetails(isUserSolo: userIsSoloPhotographer, user: user),
+      CameraOptions(isUserSolo: userIsSoloPhotographer, user: user),
+      WorkDetails(isUserSolo: userIsSoloPhotographer, user: user),
       PortfolioDetails(),
 
-      const WelcomePage(),
+      WelcomePage(user: user),
     ];
 
     totalSteps = registrationPages.length;

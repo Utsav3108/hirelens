@@ -1,4 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../registration.dart';
 
 Future<UserCredential> login({
   required String email,
@@ -34,4 +37,15 @@ Future<UserCredential> register({
   print("Registered User : ${registeredUser.user}");
 
   return registeredUser;
+}
+
+Future<void> saveUserToFirestore(RegUser user, String userId) async {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final result = await _firestore
+      .collection('users')
+      .doc(userId)
+      .set(user.toJson());
+  print("Save method returned result");
+  return result;
 }
