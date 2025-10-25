@@ -15,8 +15,10 @@ class _LoginState extends State<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  final _authRepo = AuthRepo();
+
   void handleLogin({required String email, required String password}) {
-    login(email: email, password: password);
+    _authRepo.login(email: email, password: password);
     Navigator.pushNamed(context, '/home');
   }
 
