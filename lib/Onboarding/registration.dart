@@ -7,7 +7,6 @@ import 'package:hirelens/Onboarding/registration_pages/portfolio_details.dart';
 import 'package:hirelens/Onboarding/registration_pages/studio_selection.dart';
 import 'package:hirelens/Onboarding/registration_pages/welcome_page.dart';
 import 'package:hirelens/Onboarding/registration_pages/work_details.dart';
-import 'package:hirelens/Onboarding/repos/onboarding_repo.dart';
 
 import 'dart:convert';
 
@@ -15,13 +14,13 @@ class RegUser {
   bool isSoloPhotographer = false;
   String email = "";
   String password = "";
+  String confirmPassword = "";
   String firstName = "";
   String lastName = "";
   Address address = Address();
   CameraDetails cameraDetails = CameraDetails();
   WorkExperience workEx = WorkExperience();
 
-  /// Converts the object to a Map
   Map<String, dynamic> toJson() => {
     'isSoloPhotographer': isSoloPhotographer,
     'email': email,
@@ -33,7 +32,6 @@ class RegUser {
     'workEx': workEx.toJson(),
   };
 
-  /// Prints the object in pretty JSON format
   void printAsJson() {
     final jsonStr = const JsonEncoder.withIndent('  ').convert(toJson());
     print(jsonStr);
@@ -87,31 +85,106 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final _controller = PageController();
-
   bool userIsSoloPhotographer = false;
-
   late RegUser user = RegUser();
-
   late List<Widget> registrationPages;
-
-  int _currentPage = -1;
+  String _errorMessage = "";
+  int _currentPage = 0;
   late int totalSteps;
 
+  // Holds the error state for each field
+  final Map<String, bool> _errors = {};
+
   void _nextPage() {
+    _errors.clear();
+    bool pageIsValid = true;
+
+    // --- Validation Logic ---
+    switch (_currentPage) {
+      case 1: // Personal Details
+        if (userIsSoloPhotographer) {
+          if (user.firstName.isEmpty) {
+            _errors['firstName'] = true;
+            pageIsValid = false;
+          }
+          if (user.lastName.isEmpty) {
+            _errors['lastName'] = true;
+            pageIsValid = false;
+          }
+          if (user.email.isEmpty) {
+            _errors['email'] = true;
+            pageIsValid = false;
+          }
+          if (user.password.isEmpty) {
+            _errors['password'] = true;
+            pageIsValid = false;
+          }
+
+          if (user.confirmPassword != user.password) {
+            _errors['confirmPassword'] = true;
+            pageIsValid = false;
+            setState(() {
+              _errorMessage = "Confirm password & Password must match";
+            });
+            return;
+          }
+        }
+        break;
+
+      case 2: // Location Details
+        if (user.address.address.isEmpty) {
+          _errors['address'] = true;
+          pageIsValid = false;
+        }
+        if (user.address.city.isEmpty) {
+          _errors['city'] = true;
+          pageIsValid = false;
+        }
+        if (user.address.pincode.isEmpty) {
+          _errors['pincode'] = true;
+          pageIsValid = false;
+        }
+        break;
+
+      case 3: // Camera Options
+        if (user.cameraDetails.cameraBrand.isEmpty) {
+          pageIsValid = false;
+        }
+        break;
+
+      case 4: // Work Details
+        if (user.workEx.services.isEmpty) {
+          pageIsValid = false;
+        }
+        break;
+    }
+
+    setState(() {});
+
+    if (!pageIsValid) {
+      setState(() {
+        _errorMessage = "Please fill all the mandatory details.";
+      });
+      return;
+    }
+
+    setState(() {
+      _errorMessage = "";
+    });
+
     if (_currentPage < totalSteps - 1) {
       _controller.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
       );
     } else {
-      // Submit logic
       Navigator.pushNamed(context, "/home");
       print("✅ Registration Submitted!");
     }
   }
 
   void _prevPage() {
-    if (_currentPage > -1) {
+    if (_currentPage > 0) {
       _controller.previousPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
@@ -121,36 +194,45 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-
     registrationPages = [
-      //PopupMenuExample(),
       Align(
-        alignment: AlignmentGeometry.center,
+        alignment: Alignment.center,
         child: StudioSoloSelector(
           onStudioTap: () {
             setState(() {
               userIsSoloPhotographer = false;
               user.isSoloPhotographer = userIsSoloPhotographer;
-              _nextPage();
+              _controller.nextPage(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeInOut,
+              );
             });
           },
           onSoloTap: () {
             setState(() {
               userIsSoloPhotographer = true;
               user.isSoloPhotographer = userIsSoloPhotographer;
-              _nextPage();
+              _controller.nextPage(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeInOut,
+              );
             });
           },
         ),
       ),
-
-      PersonalDetails(isUserSolo: userIsSoloPhotographer, user: user),
-      LocationDetails(isUserSolo: userIsSoloPhotographer, user: user),
-      CameraOptions(isUserSolo: userIsSoloPhotographer, user: user),
-      WorkDetails(isUserSolo: userIsSoloPhotographer, user: user),
+      PersonalDetails(
+        user: user,
+        isUserSolo: userIsSoloPhotographer,
+        errors: _errors,
+      ),
+      LocationDetails(
+        user: user,
+        isUserSolo: userIsSoloPhotographer,
+        errors: _errors,
+      ),
+      CameraOptions(user: user, isUserSolo: userIsSoloPhotographer),
+      WorkDetails(user: user, isUserSolo: userIsSoloPhotographer),
       PortfolioDetails(),
-
       WelcomePage(user: user),
     ];
 
@@ -166,8 +248,6 @@ class _RegisterState extends State<Register> {
             child: Column(
               children: [
                 const SizedBox(height: 120),
-
-                // --- Title ---
                 const Text(
                   "Hirelens.",
                   style: TextStyle(
@@ -176,9 +256,7 @@ class _RegisterState extends State<Register> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                SizedBox(height: 20),
-                // --- PageView (Steps) ---
+                const SizedBox(height: 20),
                 SizedBox(
                   height: 350,
                   child: Center(
@@ -191,10 +269,16 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 30),
-
-                // --- Buttons (Next / Back) ---
+                if (_errorMessage.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: Text(
+                      _errorMessage,
+                      style: const TextStyle(color: Colors.red, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                const SizedBox(height: 15),
                 if (_currentPage > 0) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -220,7 +304,7 @@ class _RegisterState extends State<Register> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text("Next"),
+                          child: const Text("Next"),
                         ),
                       ] else
                         ElevatedButton(
@@ -233,14 +317,12 @@ class _RegisterState extends State<Register> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text("Let's go"),
+                          child: const Text("Let's go"),
                         ),
                     ],
                   ),
                   const SizedBox(height: 30),
                 ],
-
-                // --- Bottom Sign-in ---
                 if (_currentPage < totalSteps - 1)
                   Align(
                     alignment: Alignment.center,

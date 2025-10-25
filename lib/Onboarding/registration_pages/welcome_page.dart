@@ -35,7 +35,9 @@ class _WelcomePageState extends State<WelcomePage> {
       future: _registrationFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(backgroundColor: Colors.white),
+          );
         }
         if (snapshot.hasError) {
           return Text("Your request has some error: ${snapshot.error}");

@@ -6,6 +6,7 @@ class CustomMultiSelectField extends StatefulWidget {
   final ValueChanged<List<String>>? onSelectionChanged;
   final int gridCount;
   final bool enableAnimation;
+  final bool? required;
 
   // optional scroll handling
   final ScrollController? scrollController;
@@ -20,6 +21,7 @@ class CustomMultiSelectField extends StatefulWidget {
     this.enableAnimation = true,
     this.scrollController,
     this.viewHeight,
+    this.required,
   });
 
   @override
@@ -165,6 +167,28 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
     );
   }
 
+  Widget getPlaceHolder({required bool required}) {
+    if (required) {
+      return RichText(
+        text: TextSpan(
+          text: widget.placeholder,
+          style: const TextStyle(color: Colors.grey, fontSize: 12),
+          children: [
+            TextSpan(
+              text: ' *',
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Text(
+        widget.placeholder,
+        style: const TextStyle(color: Colors.grey, fontSize: 14),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedCrossFade(
@@ -195,10 +219,7 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
           child: _selectedItems.isEmpty
               ? Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    widget.placeholder,
-                    style: const TextStyle(color: Colors.grey, fontSize: 14),
-                  ),
+                  child: getPlaceHolder(required: widget.required ?? false),
                 )
               : Wrap(
                   spacing: 8,

@@ -59,6 +59,7 @@ class CameraOptions extends StatelessWidget {
               const SizedBox(height: 20),
 
               CustomMultiSelectField(
+                required: true,
                 placeholder: "Select camera brands",
                 options: cameraCompanies,
                 scrollController: controller,

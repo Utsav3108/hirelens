@@ -8,6 +8,7 @@ class CustomTextField extends StatefulWidget {
   final bool Function(String)? validator; // returns true if valid
   final bool isSelection;
   final TextEditingController controller;
+  final bool hasError;
 
   /// Optional popup menu items (only used if isSelection = true)
   final List<String>? menuItems;
@@ -20,7 +21,6 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     required this.placeholder,
-
     required this.controller,
     this.isSecure = false,
     this.keyboardType = TextInputType.text,
@@ -30,6 +30,7 @@ class CustomTextField extends StatefulWidget {
     this.menuItems,
     this.onMenuItemSelected,
     this.onValueChange,
+    this.hasError = false,
   });
 
   @override
@@ -65,7 +66,6 @@ class CustomTextFieldState extends State<CustomTextField> {
     super.dispose();
   }
 
-  /// Builds suffix icons for secure/verified fields
   Widget? _buildSuffixIcon() {
     if (widget.enableVerification && widget.validator != null) {
       if (_isValid) {
@@ -95,7 +95,6 @@ class CustomTextFieldState extends State<CustomTextField> {
     return null;
   }
 
-  /// Show popup menu when selection field is tapped
   Future<void> _showPopupMenu(BuildContext context, Offset position) async {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -133,7 +132,6 @@ class CustomTextFieldState extends State<CustomTextField> {
       },
       child: AbsorbPointer(
         absorbing: widget.isSelection,
-        // prevent text editing for selection fields
         child: TextField(
           onChanged: widget.onValueChange,
           textInputAction: TextInputAction.done,
@@ -162,11 +160,17 @@ class CustomTextFieldState extends State<CustomTextField> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Colors.white24, width: 1),
+              borderSide: BorderSide(
+                color: widget.hasError ? Colors.red : Colors.white24,
+                width: 1,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Colors.white, width: 1.5),
+              borderSide: BorderSide(
+                color: widget.hasError ? Colors.red : Colors.white,
+                width: 1.5,
+              ),
             ),
             suffixIcon: _buildSuffixIcon(),
           ),
