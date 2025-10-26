@@ -7,6 +7,7 @@ class CustomMultiSelectField extends StatefulWidget {
   final int gridCount;
   final bool enableAnimation;
   final bool? required;
+  final bool? hasError;
 
   // optional scroll handling
   final ScrollController? scrollController;
@@ -22,6 +23,7 @@ class CustomMultiSelectField extends StatefulWidget {
     this.scrollController,
     this.viewHeight,
     this.required,
+    this.hasError,
   });
 
   @override
@@ -214,7 +216,9 @@ class _CustomMultiSelectFieldState extends State<CustomMultiSelectField>
           constraints: const BoxConstraints(minHeight: 60),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.white24, width: 1),
+            border: widget.hasError ?? false
+                ? Border.all(color: Colors.red, width: 1)
+                : Border.all(color: Colors.white24, width: 1),
           ),
           child: _selectedItems.isEmpty
               ? Align(

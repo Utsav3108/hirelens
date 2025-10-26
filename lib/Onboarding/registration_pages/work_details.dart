@@ -6,8 +6,14 @@ import '../Widgets/custom_multiple_select.dart';
 class WorkDetails extends StatefulWidget {
   final bool isUserSolo;
   final RegUser user;
+  final Map<String, bool> errors;
 
-  const WorkDetails({super.key, required this.isUserSolo, required this.user});
+  const WorkDetails({
+    super.key,
+    required this.isUserSolo,
+    required this.user,
+    required this.errors,
+  });
 
   @override
   State<WorkDetails> createState() => _WorkDetailsState();
@@ -65,12 +71,18 @@ class _WorkDetailsState extends State<WorkDetails> {
 
               CustomMultiSelectField(
                 required: true,
+                hasError: widget.errors["services"],
                 placeholder: "Select services you provide",
                 options: photographyType,
                 scrollController: scrollController,
                 viewHeight: viewHeight,
                 onSelectionChanged: (services) {
                   print("Selected photography types: $services");
+
+                  setState(() {
+                    widget.errors["services"] = services.isEmpty;
+                  });
+
                   user.workEx.services = services;
                 },
               ),

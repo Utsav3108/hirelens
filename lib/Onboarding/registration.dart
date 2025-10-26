@@ -181,22 +181,28 @@ class _RegisterState extends State<Register> {
 
       case 3: // Camera Options
         if (user.cameraDetails.cameraBrand.isEmpty) {
+          _errors['cameraBrand'] = true;
           pageIsValid = false;
         }
         break;
 
       case 4: // Work Details
         if (user.workEx.services.isEmpty) {
+          _errors['services'] = true;
           pageIsValid = false;
         }
         break;
     }
 
-    setState(() {});
+    if (pageIsValid) {
+      setState(() {});
 
-    setState(() {
-      _errorMessage = "";
-    });
+      setState(() {
+        _errorMessage = "";
+      });
+    } else {
+      _setError("Please fill all mandatory fields");
+    }
 
     return pageIsValid;
   }
@@ -245,8 +251,16 @@ class _RegisterState extends State<Register> {
         isUserSolo: userIsSoloPhotographer,
         errors: _errors,
       ),
-      CameraOptions(user: user, isUserSolo: userIsSoloPhotographer),
-      WorkDetails(user: user, isUserSolo: userIsSoloPhotographer),
+      CameraOptions(
+        user: user,
+        isUserSolo: userIsSoloPhotographer,
+        errors: _errors,
+      ),
+      WorkDetails(
+        user: user,
+        isUserSolo: userIsSoloPhotographer,
+        errors: _errors,
+      ),
       PortfolioDetails(),
       WelcomePage(user: user),
     ];
@@ -300,14 +314,6 @@ class _RegisterState extends State<Register> {
                     children: [
                       if (_currentPage > 0 &&
                           _currentPage < totalSteps - 1) ...[
-                        ElevatedButton(
-                          onPressed: _prevPage,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.1),
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text("Back"),
-                        ),
                         const SizedBox(width: 20),
                         ElevatedButton(
                           onPressed: _nextPage,
