@@ -21,6 +21,8 @@ class LocationDetails extends StatefulWidget {
 }
 
 class _LocationDetailsState extends State<LocationDetails> {
+  final ScrollController _controller = ScrollController();
+
   final TextEditingController addressController = TextEditingController();
 
   final TextEditingController studioNameController = TextEditingController();
@@ -36,6 +38,7 @@ class _LocationDetailsState extends State<LocationDetails> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: _controller,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -88,7 +91,9 @@ class _LocationDetailsState extends State<LocationDetails> {
           CustomTextField(
             hasError: widget.errors['address'] ?? false,
             controller: addressController,
-            placeholder: "Enter landmark",
+            placeholder: widget.isUserSolo
+                ? "Enter your address"
+                : "Enter landmark",
             onValueChange: (address) {
               widget.user.address.address = address;
               setState(() {
@@ -112,6 +117,13 @@ class _LocationDetailsState extends State<LocationDetails> {
             placeholder: widget.isUserSolo
                 ? "Enter the city you live in"
                 : "Area or locality",
+            onEditingCompleted: (city) {
+              final duration = Duration(milliseconds: 300);
+              final curve = Curves.easeInOut;
+              final offset = _controller.position.maxScrollExtent;
+
+              _controller.animateTo(offset, duration: duration, curve: curve);
+            },
           ),
           const SizedBox(height: 20),
           CustomTextField(

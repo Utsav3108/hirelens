@@ -18,6 +18,8 @@ class CustomTextField extends StatefulWidget {
 
   final void Function(String)? onValueChange;
 
+  final void Function(String)? onEditingCompleted;
+
   const CustomTextField({
     super.key,
     required this.placeholder,
@@ -31,6 +33,7 @@ class CustomTextField extends StatefulWidget {
     this.onMenuItemSelected,
     this.onValueChange,
     this.hasError = false,
+    this.onEditingCompleted,
   });
 
   @override
@@ -133,6 +136,7 @@ class CustomTextFieldState extends State<CustomTextField> {
       child: AbsorbPointer(
         absorbing: widget.isSelection,
         child: TextField(
+          onSubmitted: widget.onEditingCompleted,
           onChanged: widget.onValueChange,
           textInputAction: TextInputAction.done,
           controller: _controller,
