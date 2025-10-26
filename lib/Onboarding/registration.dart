@@ -18,6 +18,8 @@ class RegUser {
   String confirmPassword = "";
   String firstName = "";
   String lastName = "";
+
+  StudioDetails studio = StudioDetails();
   Address address = Address();
   CameraDetails cameraDetails = CameraDetails();
   WorkExperience workEx = WorkExperience();
@@ -28,6 +30,7 @@ class RegUser {
     'password': password,
     'firstName': firstName,
     'lastName': lastName,
+    'studio': studio.toJson(),
     'address': address.toJson(),
     'cameraDetails': cameraDetails.toJson(),
     'workEx': workEx.toJson(),
@@ -37,6 +40,16 @@ class RegUser {
     final jsonStr = const JsonEncoder.withIndent('  ').convert(toJson());
     print(jsonStr);
   }
+}
+
+class StudioDetails {
+  String studioName = "";
+  String gstNumber = "";
+
+  Map<String, dynamic> toJson() => {
+    'studioName': studioName,
+    'gstNumber': gstNumber,
+  };
 }
 
 class Address {
@@ -130,45 +143,62 @@ class _RegisterState extends State<Register> {
     // --- Validation Logic ---
     switch (_currentPage) {
       case 1: // Personal Details
-        if (userIsSoloPhotographer) {
-          if (user.firstName.isEmpty) {
-            _errors['firstName'] = true;
-            pageIsValid = false;
-          }
-          if (user.lastName.isEmpty) {
-            _errors['lastName'] = true;
-            pageIsValid = false;
-          }
-          if (user.email.isEmpty) {
-            _errors['email'] = true;
-            pageIsValid = false;
-          } else if (!isValidEmail(user.email)) {
-            _errors['email'] = true;
-            pageIsValid = false;
-            _setError("Please enter valid email address");
-            return pageIsValid;
-          }
-          if (user.password.isEmpty) {
-            _errors['password'] = true;
-            pageIsValid = false;
-          }
+        if (user.firstName.isEmpty) {
+          _errors['firstName'] = true;
+          pageIsValid = false;
+        }
+        if (user.lastName.isEmpty) {
+          _errors['lastName'] = true;
+          pageIsValid = false;
+        }
+        if (user.email.isEmpty) {
+          _errors['email'] = true;
+          pageIsValid = false;
+        } else if (!isValidEmail(user.email)) {
+          _errors['email'] = true;
+          pageIsValid = false;
+          _setError("Please enter valid email address");
+          return pageIsValid;
+        }
+        if (user.password.isEmpty) {
+          _errors['password'] = true;
+          pageIsValid = false;
+        }
 
-          if (user.confirmPassword != user.password) {
-            _errors['confirmPassword'] = true;
-            pageIsValid = false;
+        if (user.confirmPassword != user.password) {
+          _errors['confirmPassword'] = true;
+          pageIsValid = false;
 
-            _setError("Confirm password & Password must match");
+          _setError("Confirm password & Password must match");
 
-            return pageIsValid;
-          }
+          return pageIsValid;
         }
         break;
 
       case 2: // Location Details
-        if (user.address.address.isEmpty) {
-          _errors['address'] = true;
-          pageIsValid = false;
+
+        if (!userIsSoloPhotographer) {
+          if (user.studio.gstNumber.isEmpty) {
+            _errors['gst'] = true;
+            pageIsValid = false;
+          } else if (!isValidGST(user.studio.gstNumber)) {
+            _errors['gst'] = true;
+            pageIsValid = false;
+            _setError("Please enter valid GST Number");
+            return pageIsValid;
+          }
+
+          if (user.studio.studioName.isEmpty) {
+            _errors['address'] = true;
+            pageIsValid = false;
+          }
+        } else {
+          if (user.address.address.isEmpty) {
+            _errors['address'] = true;
+            pageIsValid = false;
+          }
         }
+
         if (user.address.city.isEmpty) {
           _errors['city'] = true;
           pageIsValid = false;
