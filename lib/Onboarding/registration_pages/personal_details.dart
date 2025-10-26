@@ -107,7 +107,8 @@ class _PersonalDetailsState extends State<PersonalDetails> {
             onValueChange: (password) {
               widget.user.password = password;
               setState(() {
-                widget.errors['password'] = password.isEmpty;
+                widget.errors['password'] =
+                    password.isEmpty || password.length < 6;
                 if (confirmPasswdController.text.isNotEmpty) {
                   widget.errors['confirmPassword'] =
                       confirmPasswdController.text != password;

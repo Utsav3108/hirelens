@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
 
   void handleLogin({required String email, required String password}) {
     _authRepo.login(email: email, password: password);
-    Navigator.pushNamed(context, '/home');
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override

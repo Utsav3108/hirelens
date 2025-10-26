@@ -100,6 +100,8 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final _controller = PageController();
   bool userIsSoloPhotographer = false;
+  bool isRegistrationSuccess = false;
+
   late RegUser user = RegUser();
   late List<Widget> registrationPages;
   String _errorMessage = "";
@@ -117,7 +119,8 @@ class _RegisterState extends State<Register> {
           curve: Curves.easeInOut,
         );
       } else {
-        Navigator.pushNamed(context, "/home");
+        Navigator.pop(context);
+        Navigator.pushReplacementNamed(context, "/home");
         print("✅ Registration Submitted!");
       }
     }
@@ -163,6 +166,11 @@ class _RegisterState extends State<Register> {
         if (user.password.isEmpty) {
           _errors['password'] = true;
           pageIsValid = false;
+        } else if (user.password.length < 6) {
+          _errors['password'] = true;
+          pageIsValid = false;
+          _setError("Please enter password of atleast 6 characters");
+          return pageIsValid;
         }
 
         if (user.confirmPassword != user.password) {
@@ -206,6 +214,11 @@ class _RegisterState extends State<Register> {
         if (user.address.pincode.isEmpty) {
           _errors['pincode'] = true;
           pageIsValid = false;
+        } else if (user.address.pincode.length != 6) {
+          _errors['pincode'] = true;
+          pageIsValid = false;
+          _setError("Please enter valid pincode");
+          return pageIsValid;
         }
         break;
 
@@ -292,7 +305,14 @@ class _RegisterState extends State<Register> {
         errors: _errors,
       ),
       PortfolioDetails(),
-      WelcomePage(user: user),
+      WelcomePage(
+        user: user,
+        onSuccessfulRegistration: () {
+          setState(() {
+            isRegistrationSuccess = true;
+          });
+        },
+      ),
     ];
 
     totalSteps = registrationPages.length;
@@ -357,7 +377,7 @@ class _RegisterState extends State<Register> {
                           ),
                           child: const Text("Next"),
                         ),
-                      ] else
+                      ] else if (isRegistrationSuccess)
                         ElevatedButton(
                           onPressed: _nextPage,
                           style: ElevatedButton.styleFrom(

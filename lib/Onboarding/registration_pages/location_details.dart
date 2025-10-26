@@ -132,7 +132,8 @@ class _LocationDetailsState extends State<LocationDetails> {
               widget.user.address.pincode = pincode;
               setState(() {
                 widget.errors['pincode'] =
-                    pincode != widget.user.address.pincode;
+                    pincode != widget.user.address.pincode ||
+                    widget.user.address.pincode.length != 6;
               });
             },
             controller: pincodeController,
