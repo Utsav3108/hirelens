@@ -83,7 +83,8 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               onValueChange: (email) {
                 widget.user.email = email;
                 setState(() {
-                  widget.errors['email'] = email.isEmpty;
+                  widget.errors['email'] =
+                      email.isEmpty || !isValidEmail(email);
                 });
               },
               enableVerification: true,

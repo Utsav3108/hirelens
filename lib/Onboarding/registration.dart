@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hirelens/Onboarding/Utils/validation.dart';
 import 'package:hirelens/Onboarding/registration_pages/camera_options.dart';
 
 import 'package:hirelens/Onboarding/registration_pages/location_details.dart';
@@ -106,9 +107,6 @@ class _RegisterState extends State<Register> {
         Navigator.pushNamed(context, "/home");
         print("✅ Registration Submitted!");
       }
-    } else {
-      _setError("Please fill all the mandatory details.");
-      return;
     }
   }
 
@@ -144,6 +142,11 @@ class _RegisterState extends State<Register> {
           if (user.email.isEmpty) {
             _errors['email'] = true;
             pageIsValid = false;
+          } else if (!isValidEmail(user.email)) {
+            _errors['email'] = true;
+            pageIsValid = false;
+            _setError("Please enter valid email address");
+            return pageIsValid;
           }
           if (user.password.isEmpty) {
             _errors['password'] = true;
