@@ -189,14 +189,14 @@ class _RegisterState extends State<Register> {
           }
 
           if (user.studio.studioName.isEmpty) {
-            _errors['address'] = true;
+            _errors['studio_name'] = true;
             pageIsValid = false;
           }
-        } else {
-          if (user.address.address.isEmpty) {
-            _errors['address'] = true;
-            pageIsValid = false;
-          }
+        }
+
+        if (user.address.address.isEmpty) {
+          _errors['address'] = true;
+          pageIsValid = false;
         }
 
         if (user.address.city.isEmpty) {
