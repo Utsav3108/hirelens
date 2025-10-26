@@ -64,6 +64,7 @@ class _WorkDetailsState extends State<WorkDetails> {
               const SizedBox(height: 20),
 
               CustomMultiSelectField(
+                required: true,
                 placeholder: "Select services you provide",
                 options: photographyType,
                 scrollController: scrollController,

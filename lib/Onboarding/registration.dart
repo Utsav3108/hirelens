@@ -96,6 +96,36 @@ class _RegisterState extends State<Register> {
   final Map<String, bool> _errors = {};
 
   void _nextPage() {
+    if (_checkValidations()) {
+      if (_currentPage < totalSteps - 1) {
+        _controller.nextPage(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        Navigator.pushNamed(context, "/home");
+        print("✅ Registration Submitted!");
+      }
+    } else {
+      _setError("Please fill all the mandatory details.");
+      return;
+    }
+  }
+
+  void _prevPage() {
+    _errors.clear();
+
+    _setError("");
+
+    if (_currentPage > 0) {
+      _controller.previousPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  bool _checkValidations() {
     _errors.clear();
     bool pageIsValid = true;
 
@@ -123,10 +153,10 @@ class _RegisterState extends State<Register> {
           if (user.confirmPassword != user.password) {
             _errors['confirmPassword'] = true;
             pageIsValid = false;
-            setState(() {
-              _errorMessage = "Confirm password & Password must match";
-            });
-            return;
+
+            _setError("Confirm password & Password must match");
+
+            return pageIsValid;
           }
         }
         break;
@@ -161,35 +191,17 @@ class _RegisterState extends State<Register> {
 
     setState(() {});
 
-    if (!pageIsValid) {
-      setState(() {
-        _errorMessage = "Please fill all the mandatory details.";
-      });
-      return;
-    }
-
     setState(() {
       _errorMessage = "";
     });
 
-    if (_currentPage < totalSteps - 1) {
-      _controller.nextPage(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      Navigator.pushNamed(context, "/home");
-      print("✅ Registration Submitted!");
-    }
+    return pageIsValid;
   }
 
-  void _prevPage() {
-    if (_currentPage > 0) {
-      _controller.previousPage(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
+  void _setError(String errorMessage) {
+    setState(() {
+      _errorMessage = errorMessage;
+    });
   }
 
   @override
