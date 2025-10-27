@@ -8,6 +8,26 @@
 	<string>Hirelens</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+    
+    <!-- URL Schemes for Google Sign-In -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <!-- Replace this with your reversed client ID -->
+                <string>com.googleusercontent.apps.1095009168653-6acbd5ngj226qpjteqiun163mtrgrkgp</string>
+            </array>
+        </dict>
+    </array>
+
+    <!-- Used for Firebase / Google Sign-In -->
+    <key>GIDClientID</key>
+    <string>1095009168653-6acbd5ngj226qpjteqiun163mtrgrkgp.apps.googleusercontent.com</string>
+
+    
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
