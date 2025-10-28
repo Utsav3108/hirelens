@@ -18,8 +18,15 @@ class _LoginState extends State<Login> {
   final _authRepo = AuthRepo();
 
   void handleLogin({required String email, required String password}) {
-    _authRepo.login(email: email, password: password);
+    _authRepo.signInWithGoogle();
     Navigator.pushReplacementNamed(context, '/home');
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _authRepo.initializeGoogleSignIn();
   }
 
   @override

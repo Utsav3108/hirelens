@@ -12,7 +12,20 @@
           "package_name": "com.utsav.hirelens"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1095009168653-nam2b06fn59g4u798dq9hira8eot7l97.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.utsav.hirelens",
+            "certificate_hash": "e7b592ed6bf6cd67bbc0f890d3a95d5161571f98"
+          }
+        },
+        {
+          "client_id": "1095009168653-98oq02i7225ur283crhmkoftt13ta0l2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDc5Yr2-IJ_95fBzd8i8jphxUAzOR5Mrgk"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095009168653-98oq02i7225ur283crhmkoftt13ta0l2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1095009168653-6acbd5ngj226qpjteqiun163mtrgrkgp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.utsav.hirelens"
+              }
+            }
+          ]
         }
       }
     }

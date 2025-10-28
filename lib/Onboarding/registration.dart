@@ -126,19 +126,6 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  void _prevPage() {
-    _errors.clear();
-
-    _setError("");
-
-    if (_currentPage > 0) {
-      _controller.previousPage(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
   bool _checkValidations() {
     _errors.clear();
     bool pageIsValid = true;
