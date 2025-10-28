@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hirelens/Onboarding/Utils/validation.dart';
 import 'package:hirelens/Onboarding/repos/onboarding_repo.dart';
+import '../AppAlerts/hirelens_alert.dart';
 import 'Widgets/CustomTextFields.dart';
+import 'Widgets/signinGoogle.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
@@ -17,9 +21,84 @@ class _LoginState extends State<Login> {
 
   final _authRepo = AuthRepo();
 
-  void handleLogin({required String email, required String password}) {
-    _authRepo.signInWithGoogle();
-    Navigator.pushReplacementNamed(context, '/home');
+  Future<void> handleGoogleSignIn() async {
+    try {
+      final result = await _authRepo.signInWithGoogle();
+
+      if (result != null) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        // Show alert for registration.
+        HirelensAlert.show(
+          context: context,
+          title: 'Login Unsuccessful',
+          message:
+              'Email you selected is not registered. Kindly try other emails or register with the email.',
+          actions: [
+            AlertAction(
+              title: 'Register Now',
+              isPrimary: true,
+              onPressed: () {
+                // Your action
+                Navigator.pushNamed(context, "/register");
+              },
+            ),
+            AlertAction(
+              title: 'Cancel',
+              onPressed: () {
+                // Cancel action
+              },
+            ),
+          ],
+        );
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool> handleLogin({
+    required String email,
+    required String password,
+  }) async {
+    if (!isValidEmail(email)) {
+      HirelensAlert.show(
+        context: context,
+        title: 'Login Unsuccessful',
+        message: 'Please enter a valid email address.',
+        actions: [],
+      );
+
+      return false;
+    } else if (password.length > 6) {
+      HirelensAlert.show(
+        context: context,
+        title: 'Login Unsuccessful',
+        message: 'Password length should be more than 6 digits.',
+        actions: [],
+      );
+
+      return false;
+    } else {
+      try {
+        await _authRepo.login(email: email, password: password);
+        Navigator.pushReplacementNamed(context, '/home');
+
+        return true;
+      } on FirebaseAuthException catch (e) {
+        if (mounted) {
+          HirelensAlert.show(
+            context: context,
+            title: 'Login Unsuccessful',
+            message: e.message.toString(),
+            actions: [],
+          );
+        }
+
+        return false;
+        // Show Alert.
+      }
+    }
   }
 
   @override
@@ -95,6 +174,13 @@ class _LoginState extends State<Login> {
                     child: Text("Login"),
                   ),
                 ),
+
+                SizedBox(height: 20),
+
+                Center(
+                  child: SignInWithGoogleButton(onPressed: handleGoogleSignIn),
+                ),
+                SizedBox(height: 10),
 
                 Center(
                   child: TextButton(

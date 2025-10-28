@@ -24,6 +24,8 @@ class AuthRepo {
     required String email,
     required String password,
   }) async {
+    print("✌️ Attempting login with email $email, password $password");
+
     try {
       final creds = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -133,6 +135,7 @@ class AuthRepo {
         return userCredential;
       } else {
         print("❌ Google user doesn't exists in Firestore");
+        return null;
       }
     } on GoogleSignInException catch (e) {
       print("❌ Google Sign-In failed: ${_errorMessageFromSignInException(e)}");
@@ -143,64 +146,6 @@ class AuthRepo {
     }
     return null;
   }
-
-  // 🔹 Alternative: Sign in with Google (Legacy method for compatibility)
-  // Use this if you need to support older implementations
-  // Future<UserCredential?> signInWithGoogleLegacy() async {
-  //   try {
-  //     print("➡️ Attempting Google Sign-In (Legacy)...");
-  //
-  //     // Trigger the Google sign-in flow
-  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-  //     if (googleUser == null) {
-  //       print("⚠️ Google Sign-In cancelled by user.");
-  //       return null;
-  //     }
-  //
-  //     final GoogleSignInAuthentication googleAuth =
-  //     await googleUser.authentication;
-  //
-  //     // Create Firebase credential
-  //     final credential = GoogleAuthProvider.credential(
-  //       accessToken: googleAuth.accessToken,
-  //       idToken: googleAuth.idToken,
-  //     );
-  //
-  //     // Sign in to Firebase with Google credential
-  //     final userCredential = await _auth.signInWithCredential(credential);
-  //
-  //     final user = userCredential.user;
-  //     if (user == null) throw Exception("Google user data not found.");
-  //
-  //     print("✅ Google user signed in: ${user.email}");
-  //
-  //     // Check if user already exists in Firestore
-  //     final userDoc = await _firestore.collection('users').doc(user.email).get();
-  //
-  //     if (!userDoc.exists) {
-  //       // Save minimal Google user data to Firestore
-  //       final displayNameParts = user.displayName?.split(" ") ?? [];
-  //       final googleUserData = {
-  //         'firstName': displayNameParts.isNotEmpty ? displayNameParts.first : "",
-  //         'lastName': displayNameParts.length > 1 ? displayNameParts.last : "",
-  //         'email': user.email ?? "",
-  //         'photoUrl': user.photoURL ?? "",
-  //         'isGoogleUser': true,
-  //         'createdAt': FieldValue.serverTimestamp(),
-  //       };
-  //
-  //       await _firestore.collection('users').doc(user.email).set(googleUserData);
-  //       print("✅ Google user data saved to Firestore");
-  //     } else {
-  //       print("📄 Google user already exists in Firestore");
-  //     }
-  //
-  //     return userCredential;
-  //   } catch (e) {
-  //     print("❌ Google Sign-In failed: $e");
-  //     rethrow;
-  //   }
-  // }
 
   // 🔹 Sign out user (supports both Firebase and Google)
   Future<void> logout() async {
