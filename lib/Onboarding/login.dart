@@ -26,7 +26,7 @@ class _LoginState extends State<Login> {
       final result = await _authRepo.signInWithGoogle();
 
       if (result != null) {
-        Navigator.pushReplacementNamed(context, '/home');
+        //Navigator.pushReplacementNamed(context, '/home');
       } else {
         // Show alert for registration.
         HirelensAlert.show(
@@ -82,7 +82,7 @@ class _LoginState extends State<Login> {
     } else {
       try {
         await _authRepo.login(email: email, password: password);
-        Navigator.pushReplacementNamed(context, '/home');
+        //Navigator.pushReplacementNamed(context, '/home');
 
         return true;
       } on FirebaseAuthException catch (e) {
@@ -90,7 +90,7 @@ class _LoginState extends State<Login> {
           HirelensAlert.show(
             context: context,
             title: 'Login Unsuccessful',
-            message: e.message.toString(),
+            message: "${e.message} Try another method to login.",
             actions: [],
           );
         }
@@ -145,6 +145,7 @@ class _LoginState extends State<Login> {
                 CustomTextField(
                   placeholder: "Enter your email",
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: 20),
 

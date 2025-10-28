@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hirelens/Home/home.dart';
 import 'package:hirelens/Onboarding/login.dart';
 import 'package:hirelens/Onboarding/registration.dart';
+import 'package:hirelens/auth_wrapper.dart'; // Import the auth wrapper
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -9,7 +10,7 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -72,8 +73,10 @@ class MyApp extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.black),
       ),
 
-      // 👇 Define all routes here
-      initialRoute: '/login',
+      // Use AuthWrapper as initial route
+      home: const AuthWrapper(),
+
+      // Define named routes
       routes: {
         '/login': (context) => const Login(title: 'Login'),
         '/register': (context) => const Register(),
@@ -82,3 +85,62 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// ============================================
+// EXAMPLE: How to implement logout in your Home screen
+// ============================================
+
+/*
+import 'package:firebase_auth/firebase_auth.dart';
+
+// In your Home widget, add this logout method:
+Future<void> _logout(BuildContext context) async {
+  try {
+    await FirebaseAuth.instance.signOut();
+    // Navigation is handled automatically by AuthWrapper
+    // But if you want to explicitly navigate:
+    if (context.mounted) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/login',
+        (route) => false,
+      );
+    }
+  } catch (e) {
+    print('Error signing out: $e');
+  }
+}
+
+// Use it in a button:
+ElevatedButton(
+  onPressed: () => _logout(context),
+  child: const Text('Logout'),
+)
+*/
+
+// ============================================
+// EXAMPLE: How to navigate after successful login
+// ============================================
+
+/*
+// In your Login widget, after successful authentication:
+
+Future<void> _login() async {
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    // AuthWrapper will automatically redirect to Home
+    // Or explicitly navigate:
+    if (mounted) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/home',
+        (route) => false,
+      );
+    }
+  } catch (e) {
+    // Handle error
+    print('Login error: $e');
+  }
+}
+*/
