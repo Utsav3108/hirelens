@@ -28,7 +28,6 @@ class _LoginState extends State<Login> {
       if (result != null) {
         //Navigator.pushReplacementNamed(context, '/home');
       } else {
-        // Show alert for registration.
         HirelensAlert.show(
           context: context,
           title: 'Login Unsuccessful',
@@ -39,7 +38,6 @@ class _LoginState extends State<Login> {
               title: 'Register Now',
               isPrimary: true,
               onPressed: () {
-                // Your action
                 Navigator.pushNamed(context, "/register");
               },
             ),
@@ -96,14 +94,12 @@ class _LoginState extends State<Login> {
         }
 
         return false;
-        // Show Alert.
       }
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _authRepo.initializeGoogleSignIn();
   }
@@ -115,13 +111,14 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          child: SizedBox(
-            height: 600,
-            width: width - 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 30),
+                SizedBox(height: 60),
+
+                // Header Section
                 Text(
                   "Hirelens.",
                   style: TextStyle(
@@ -140,8 +137,9 @@ class _LoginState extends State<Login> {
                   ),
                 ),
 
-                SizedBox(height: 30),
+                SizedBox(height: 50),
 
+                // Form Section
                 CustomTextField(
                   placeholder: "Enter your email",
                   controller: emailController,
@@ -154,9 +152,13 @@ class _LoginState extends State<Login> {
                   isSecure: true,
                   controller: passwordController,
                 ),
-                SizedBox(height: 20),
 
-                Center(
+                SizedBox(height: 35),
+
+                // Login Button - Full Width
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
                   child: ElevatedButton(
                     onPressed: () {
                       handleLogin(
@@ -168,61 +170,92 @@ class _LoginState extends State<Login> {
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       elevation: 2,
                     ),
-                    child: Text("Login"),
+                    child: Text(
+                      "Login",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
 
-                SizedBox(height: 20),
+                SizedBox(height: 25),
 
-                Center(
+                // Divider with "OR"
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: Colors.grey.withOpacity(0.3),
+                        thickness: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        "OR",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: Colors.grey.withOpacity(0.3),
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 25),
+
+                // Google Sign In - Full Width
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
                   child: SignInWithGoogleButton(onPressed: handleGoogleSignIn),
                 ),
-                SizedBox(height: 10),
 
+                SizedBox(height: 30),
+
+                // Sign Up Link
                 Center(
                   child: TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, "/register");
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Not having an Account?",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                            shadows: [
-                              Shadow(
-                                offset: Offset(2, 2),
-                                // how far the shadow moves
-                                blurRadius: 6.0,
-                                // how soft the shadow is
-                                color: Colors.grey.withOpacity(
-                                  0.4,
-                                ), // shadow color
-                              ),
-                            ],
-                          ),
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Not having an Account? ",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w400,
                         ),
-                        SizedBox(width: 5),
-                        Text(
-                          "Create here",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                        children: [
+                          TextSpan(
+                            text: "Create here",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
+
+                SizedBox(height: 40),
               ],
             ),
           ),
